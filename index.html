@@ -15,8 +15,10 @@
   <meta property="og:title" content="Rumaz | Goed kijken. Slim denken. Gewoon doen.">
   <meta property="og:description" content="Projectkracht, structuur en praktisch advies voor organisaties en ondernemers.">
   <meta property="og:url" content="https://rumaz.nl/">
-
-  <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgNDAwIj4KICA8cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgcng9Ijg0IiBmaWxsPSIjMDgyYzIyIi8+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMCA5MikiIGZpbGw9IiNmMWVhZGMiPgogICAgPHBhdGggZD0iTTE2IDE4MiBBMTc0IDE3NCAwIDAgMSAxMjYgMjUgTDEzOSA3NiBBMTIxIDEyMSAwIDAgMCA2OCAxODIgWiIvPgogICAgPHBhdGggZD0iTTI3NCAyNSBBMTc0IDE3NCAwIDAgMSAzODQgMTgyIEwzMzIgMTgyIEExMjEgMTIxIDAgMCAwIDI2MSA3NiBaIi8+CiAgICA8cGF0aCBkPSJNMTQ4IDE1IEwyNTIgMTUgTDIzNyAxMzMgTDE2MyAxMzMgWiIvPgogIDwvZz4KPC9zdmc+Cg==" type="image/svg+xml">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
+  <link rel="manifest" href="/site.webmanifest">
   <style>
 :root {
   --green: #082c22;
@@ -64,9 +66,23 @@ a { color: inherit; }
 .brand, .footer-brand {
   text-decoration: none;
   font-family: var(--serif);
-  font-size: 1.65rem;
   letter-spacing: .025em;
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
 }
+.brand { font-size: 1.65rem; }
+.brand-mark {
+  width: 36px;
+  height: 24px;
+  flex: 0 0 auto;
+  display: block;
+}
+.footer-brand .brand-mark { width: 31px; height: 21px; }
+
+.brand .brand-mark, .footer-brand .brand-mark { transition: transform .22s ease; }
+.brand:hover .brand-mark, .footer-brand:hover .brand-mark { transform: translateY(-1px); }
+
 nav { display: flex; align-items: center; gap: 30px; }
 nav a {
   text-decoration: none;
@@ -445,7 +461,11 @@ footer > *:last-child { text-align: right; }
 </head>
 <body>
   <header class="site-header">
-    <a class="brand" href="#top" aria-label="RuMaZ home">RuMaZ</a>
+    <a class="brand" href="#top" aria-label="RuMaZ home"><svg class="brand-mark" viewBox="0 0 400 210" aria-hidden="true" focusable="false">
+        <path d="M16 182 A174 174 0 0 1 126 25 L139 76 A121 121 0 0 0 68 182 Z" fill="currentColor"/>
+        <path d="M274 25 A174 174 0 0 1 384 182 L332 182 A121 121 0 0 0 261 76 Z" fill="currentColor"/>
+        <path d="M148 15 L252 15 L237 133 L163 133 Z" fill="currentColor"/>
+      </svg><span>RuMaZ</span></a>
     <nav aria-label="Hoofdnavigatie">
       <a href="#werk">Wat ik doe</a>
       <a href="#werkwijze">Werkwijze</a>
@@ -609,7 +629,11 @@ footer > *:last-child { text-align: right; }
   </main>
 
   <footer>
-    <a class="footer-brand" href="#top">RuMaZ</a>
+    <a class="footer-brand" href="#top" aria-label="RuMaZ home"><svg class="brand-mark" viewBox="0 0 400 210" aria-hidden="true" focusable="false">
+        <path d="M16 182 A174 174 0 0 1 126 25 L139 76 A121 121 0 0 0 68 182 Z" fill="currentColor"/>
+        <path d="M274 25 A174 174 0 0 1 384 182 L332 182 A121 121 0 0 0 261 76 Z" fill="currentColor"/>
+        <path d="M148 15 L252 15 L237 133 L163 133 Z" fill="currentColor"/>
+      </svg><span>RuMaZ</span></a>
     <a href="mailto:info@rumaz.nl">info@rumaz.nl</a>
     <span>Hilversum · Nederland</span>
     <span>© <span id="year"></span> Rumaz</span>
