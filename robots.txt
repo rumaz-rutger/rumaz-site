@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rumaz.nl/sitemap.xml
