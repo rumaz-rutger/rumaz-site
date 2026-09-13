@@ -1,12 +1,1 @@
-{
-  "name": "Rumaz",
-  "short_name": "Rumaz",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#082c22",
-  "theme_color": "#082c22",
-  "icons": [
-    {"src":"/icon-192.png","sizes":"192x192","type":"image/png"},
-    {"src":"/icon-512.png","sizes":"512x512","type":"image/png"}
-  ]
-}
+{"name":"RuMaZ","short_name":"RuMaZ","start_url":"/","display":"standalone","background_color":"#fbf8f1","theme_color":"#082c22"}

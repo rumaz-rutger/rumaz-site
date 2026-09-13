@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1100" role="img" aria-labelledby="title desc">
+  <title id="title">Rumaz editorial laptop header</title>
+  <desc id="desc">A refined editorial still life with laptop, notebook and calculator in RuMaZ colours.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#f5f0e6"/>
+      <stop offset="1" stop-color="#ebe2d3"/>
+    </linearGradient>
+    <linearGradient id="deskGlow" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#13382e" stop-opacity="0.10"/>
+      <stop offset="1" stop-color="#082c22" stop-opacity="0.02"/>
+    </linearGradient>
+    <linearGradient id="laptopBody" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#ddd8ce"/>
+      <stop offset="1" stop-color="#bcb7ad"/>
+    </linearGradient>
+    <linearGradient id="screen" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#071e17"/>
+      <stop offset="1" stop-color="#123a2f"/>
+    </linearGradient>
+    <linearGradient id="paper" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#fffdf9"/>
+      <stop offset="1" stop-color="#f0eadf"/>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="180%">
+      <feDropShadow dx="0" dy="34" stdDeviation="38" flood-color="#051a14" flood-opacity="0.18"/>
+    </filter>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#051a14" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="1100" fill="url(#bg)"/>
+  <circle cx="1240" cy="180" r="290" fill="#f9f4ea" opacity="0.85"/>
+  <circle cx="240" cy="890" r="260" fill="#f2ebde" opacity="0.7"/>
+  <rect x="70" y="70" width="1460" height="960" rx="42" fill="url(#deskGlow)" opacity="0.85"/>
+
+  <g filter="url(#shadow)" transform="translate(0 10)">
+    <rect x="360" y="240" width="850" height="500" rx="28" fill="url(#screen)"/>
+    <rect x="398" y="278" width="774" height="422" rx="12" fill="#0d3026"/>
+    <rect x="440" y="328" width="300" height="14" rx="7" fill="#1f5848" opacity="0.92"/>
+    <rect x="440" y="368" width="220" height="14" rx="7" fill="#2b7460" opacity="0.86"/>
+    <rect x="440" y="408" width="260" height="14" rx="7" fill="#1a4f41" opacity="0.78"/>
+    <rect x="440" y="482" width="200" height="136" rx="20" fill="#f2ebde" opacity="0.95"/>
+    <rect x="468" y="514" width="144" height="14" rx="7" fill="#123d32"/>
+    <rect x="468" y="548" width="110" height="10" rx="5" fill="#4a7468" opacity="0.7"/>
+    <rect x="468" y="575" width="122" height="10" rx="5" fill="#4a7468" opacity="0.55"/>
+    <rect x="780" y="480" width="330" height="138" rx="20" fill="#f5f0e6" opacity="0.94"/>
+    <path d="M826 575 C868 505 926 508 963 565 S1057 615 1080 558" fill="none" stroke="#103a2f" stroke-width="10" stroke-linecap="round"/>
+    <circle cx="828" cy="574" r="8" fill="#103a2f"/><circle cx="964" cy="566" r="8" fill="#103a2f"/><circle cx="1080" cy="558" r="8" fill="#103a2f"/>
+    <rect x="830" y="518" width="88" height="14" rx="7" fill="#6a9287" opacity="0.6"/>
+  </g>
+
+  <g filter="url(#shadow)">
+    <path d="M278 748 h1030 l98 112 c11 12 7 31-8 38-31 15-151 28-605 28S202 913 171 898c-15-7-19-26-8-38l115-112z" fill="url(#laptopBody)"/>
+    <rect x="698" y="806" width="96" height="12" rx="6" fill="#8b877d" opacity="0.82"/>
+  </g>
+
+  <g filter="url(#soft)" transform="rotate(-8 265 745)">
+    <rect x="120" y="508" width="250" height="350" rx="20" fill="url(#paper)"/>
+    <rect x="154" y="570" width="118" height="11" rx="5" fill="#082c22" opacity="0.85"/>
+    <rect x="154" y="606" width="160" height="9" rx="4.5" fill="#7d817a" opacity="0.7"/>
+    <rect x="154" y="635" width="176" height="9" rx="4.5" fill="#7d817a" opacity="0.55"/>
+    <rect x="154" y="664" width="152" height="9" rx="4.5" fill="#7d817a" opacity="0.42"/>
+    <rect x="154" y="720" width="76" height="76" rx="14" fill="#0e3b2f" opacity="0.90"/>
+    <path d="M188 755 l14 16 30-34" fill="none" stroke="#f5f0e6" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <g filter="url(#soft)" transform="rotate(8 1330 735)">
+    <rect x="1240" y="564" width="220" height="290" rx="26" fill="#13382e"/>
+    <rect x="1276" y="612" width="58" height="28" rx="10" fill="#edf3ee" opacity="0.95"/>
+    <rect x="1360" y="612" width="58" height="28" rx="10" fill="#edf3ee" opacity="0.95"/>
+    <rect x="1276" y="661" width="58" height="28" rx="10" fill="#edf3ee" opacity="0.95"/>
+    <rect x="1360" y="661" width="58" height="28" rx="10" fill="#edf3ee" opacity="0.95"/>
+    <rect x="1276" y="710" width="58" height="28" rx="10" fill="#edf3ee" opacity="0.95"/>
+    <rect x="1360" y="710" width="58" height="28" rx="10" fill="#edf3ee" opacity="0.95"/>
+    <rect x="1276" y="770" width="142" height="32" rx="12" fill="#d8e4dc" opacity="0.95"/>
+  </g>
+
+  <g opacity="0.72" transform="translate(1115 282) rotate(13)">
+    <rect x="0" y="0" width="160" height="28" rx="14" fill="#f5f0e6"/>
+    <rect x="18" y="9" width="124" height="10" rx="5" fill="#0e3b2f" opacity="0.92"/>
+  </g>
+  <g opacity="0.7" transform="translate(260 370) rotate(-22)">
+    <rect x="0" y="0" width="126" height="22" rx="11" fill="#d6cec0"/>
+    <rect x="100" y="-3" width="26" height="28" rx="10" fill="#8e7a56"/>
+  </g>
+</svg>

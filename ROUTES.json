@@ -1,0 +1,31 @@
+{
+  "version": "1.21-final",
+  "public_indexable": [
+    "/",
+    "/diensten/",
+    "/diensten/projectbasis/",
+    "/diensten/korte-sprint/",
+    "/diensten/sparring/",
+    "/uitgezocht/",
+    "/rekenen/",
+    "/start/",
+    "/over/",
+    "/contact/",
+    "/faq/",
+    "/transparantie/"
+  ],
+  "staged_noindex": [
+    "/uitgezocht/zakelijke-rekening-zonder-vaste-kosten/",
+    "/uitgezocht/zakelijke-email-eigen-domein/",
+    "/uitgezocht/eenmanszaak-kosten-per-jaar/",
+    "/rekenen/zakelijk-of-prive/",
+    "/rekenen/jaarkosten-onderneming/",
+    "/rekenen/starterstack/",
+    "/rekenen/pakket-of-losse-tools/",
+    "/rekenen/zelf-doen-of-uitbesteden/",
+    "/start/startercheck/",
+    "/disclaimer/",
+    "/algemene-voorwaarden/",
+    "/privacy/"
+  ]
+}

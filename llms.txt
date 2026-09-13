@@ -1,10 +1,9 @@
 # Rumaz
-
 Website: https://rumaz.nl/
 Contact: info@rumaz.nl
 Location: Hilversum, Netherlands
 
-Rumaz helps organisations and entrepreneurs move ideas, projects and questions forward through project support, structure and process, sparring, practical advice and execution.
+Rumaz helps organisations and entrepreneurs move ideas, projects and questions forward through project support, structure, process, sparring, practical advice and execution.
 
 Brand name usage:
 - RuMaZ: visual wordmark / brand mark
@@ -16,4 +15,12 @@ Core approach:
 - Slim denken.
 - Gewoon doen.
 
-Rumaz was founded by Rutger Martinus van Zwam.
+Main sections:
+- /diensten/
+- /uitgezocht/
+- /rekenen/
+- /start/
+- /over/
+- /contact/
+- /faq/
+- /transparantie/
