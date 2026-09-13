@@ -1,0 +1,36 @@
+name: Import RuMaZ FINAL
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Import v1.21 FINAL
+        run: |
+          mkdir -p /tmp/rumaz-final
+          unzip -q RuMaZ-FINAL-v1.21.zip -d /tmp/rumaz-final
+
+          rsync -av --delete \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            /tmp/rumaz-final/ ./
+
+          rm -f RuMaZ-FINAL-v1.21.zip
+          rm -f CNAME
+
+      - name: Commit FINAL site
+        run: |
+          git config user.name "RuMaZ deploy"
+          git config user.email "actions@github.com"
+          git add -A
+          git commit -m "RuMaZ v1.21 FINAL" || exit 0
+          git push
