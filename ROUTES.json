@@ -1,5 +1,5 @@
 {
-  "version": "1.21-final",
+  "version": "2.1-candidate",
   "public_indexable": [
     "/",
     "/diensten/",
@@ -12,14 +12,16 @@
     "/over/",
     "/contact/",
     "/faq/",
-    "/transparantie/"
+    "/transparantie/",
+    "/quickscan/",
+    "/startklaar/",
+    "/rekenen/jaarkosten-onderneming/"
   ],
   "staged_noindex": [
     "/uitgezocht/zakelijke-rekening-zonder-vaste-kosten/",
     "/uitgezocht/zakelijke-email-eigen-domein/",
     "/uitgezocht/eenmanszaak-kosten-per-jaar/",
     "/rekenen/zakelijk-of-prive/",
-    "/rekenen/jaarkosten-onderneming/",
     "/rekenen/starterstack/",
     "/rekenen/pakket-of-losse-tools/",
     "/rekenen/zelf-doen-of-uitbesteden/",

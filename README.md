@@ -1,3 +1,7 @@
+# RuMaZ v2.1 candidate
+
+V2-candidate met definitief sluitsteenbeeldmerk, bredere positionering, Quickscan én nieuw vast product RuMaZ Startklaar (€1.995 excl. btw) voor de complete professionele basis van een eenmanszaak. Gebouwd als review-candidate; niet automatisch live gepubliceerd.
+
 # RuMaZ site structure v1.21 FINAL
 
 Definitieve sitebuild na gebruikersronde op staging.
@@ -26,3 +30,7 @@ De stagingbundle blokkeert indexatie op drie niveaus: `robots.txt`, `X-Robots-Ta
 
 ## Legacy routes
 Drie oude dienstenroutes zijn verwijderd en via `_redirects` doorgezet naar de actuele samenwerkingsvormen.
+
+
+## v1.22 candidate
+Nieuwe sluitsteenmark, favicon-PNGs, Quickscan, bredere homepagepositionering, persoonlijker Over, Starten, contact-logo-fix en eerste live rekentool.
