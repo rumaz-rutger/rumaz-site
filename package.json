@@ -1,0 +1,19 @@
+{
+  "name": "rumaz-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --experimental-vm-modules --test qa/*.test.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "2.119.0",
+    "nodemailer": "10.5.0"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "jsdom": "31.0.0"
+  }
+}

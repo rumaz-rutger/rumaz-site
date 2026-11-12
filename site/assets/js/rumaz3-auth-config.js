@@ -1,0 +1,1 @@
+window.RUMAZ_AUTH_CONFIG = Object.freeze({ enabled: false, siteOrigin: "https://rumaz-staging.netlify.app", supabaseUrl: "https://lwqttzzyzfvxqerltmoi.supabase.co", supabaseAnonKey: "sb_publishable_bPLRFUxWgeQa18is_A9_Kw_C-D6T4cg" });

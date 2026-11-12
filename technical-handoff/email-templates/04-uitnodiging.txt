@@ -1,0 +1,12 @@
+Onderwerp: Je bent uitgenodigd voor {pleknaam}
+
+Hoi {voornaam},
+
+{uitnodiger} heeft je uitgenodigd voor {pleknaam}. In Rumaz vind je de agenda, praktische informatie en berichten van jullie kring.
+
+Bekijk je uitnodiging: {UITNODIGING_URL}
+
+Je bepaalt zelf of je wilt meedoen. De link verloopt na een beperkte tijd.
+
+Groet,
+Rumaz

@@ -1,0 +1,46 @@
+{
+  "html": 48,
+  "references": 1531,
+  "broken": [],
+  "js": [
+    {
+      "path": "assets/js/html-preview.js",
+      "passed": true
+    },
+    {
+      "path": "assets/js/rumaz3-home-verhalen.js",
+      "passed": true
+    },
+    {
+      "path": "assets/js/rumaz3-social.js",
+      "passed": true
+    },
+    {
+      "path": "assets/js/rumaz3-auth-config.js",
+      "passed": true
+    },
+    {
+      "path": "assets/js/site.js",
+      "passed": true
+    },
+    {
+      "path": "assets/js/rumaz3-auth.js",
+      "passed": true
+    },
+    {
+      "path": "assets/js/rumaz3-app.js",
+      "passed": true
+    },
+    {
+      "path": "assets/js/shop.js",
+      "passed": true
+    }
+  ],
+  "changed_vs_rc5": [
+    "in-de-buurt/index.html",
+    "gehuurde-plek/index.html",
+    "gedeelde-plek/index.html",
+    "eigen-plek/index.html",
+    "assets/js/rumaz3-social.js"
+  ]
+}

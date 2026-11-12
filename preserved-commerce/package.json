@@ -1,0 +1,19 @@
+{
+  "name": "rumaz-site",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/dev.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "check": "node scripts/check.mjs",
+    "export:html": "npm run build && node scripts/export-html.mjs"
+  },
+  "dependencies": {
+    "pg": "8.16.3"
+  }
+}

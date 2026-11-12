@@ -1,0 +1,9 @@
+﻿sleutel,moment,verantwoordelijk,onderwerp,doorklik,template,voorwaarden
+auth_confirmation,Na nieuwe registratie,Supabase Auth,E-mailadres bevestigen,/app/account/welkom/,auth provider template,"Verplicht; redirects allowlist, token eenmalig"
+welcome,"Na geverifieerde registratie, 1x",Betrouwbare server trigger/outbox,Welkom bij Rumaz,/app/#plekken,email-templates/02-welkom.txt,Deduplicatie per account; pas na verificatie
+reset_password,Wachtwoord vergeten,Supabase Auth,Stel je wachtwoord opnieuw in,/app/account/wachtwoord-instellen/,auth provider template,Generieke melding; expirerend token; rate limits
+invite_member,Beheerder nodigt persoon uit,Serverfunctie + outbox,Je bent uitgenodigd voor {place},/app/uitnodiging/?token={TOKEN},email-templates/04-uitnodiging.txt,Token gehasht opgeslagen en rol server-side; route NIET gebouwd
+booking_requested,Lid vraagt verblijf aan,DB-transactie + outbox,Verblijfsaanvraag voor {place},/app/?booking={BOOKING_ID}#plek-agenda,email-templates/05-verblijfsaanvraag.txt,Aan beheerder(s); geen akkoord door open e-maillink
+booking_approved,Beheerder keurt goed,DB-transactie + outbox,Je verblijf is bevestigd,/app/?booking={BOOKING_ID}#plek-agenda,email-templates/06-verblijf-bevestigd.txt,Aan aanvrager; mail versturen na transactie
+booking_rejected,Beheerder wijst af,DB-transactie + outbox,Bericht over je verblijfsaanvraag,/app/?booking={BOOKING_ID}#plek-agenda,email-templates/07-verblijf-afgewezen.txt,Aan aanvrager; niet automatisch andere dagen bezetten
+invitation_accepted,Genodigde accepteert,DB-transactie + outbox,{name} doet mee met {place},/app/#plek,email-templates/08-uitnodiging-geaccepteerd.txt,Optioneel; voorkeuren respecteren

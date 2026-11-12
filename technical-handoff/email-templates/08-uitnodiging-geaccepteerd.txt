@@ -1,0 +1,10 @@
+Onderwerp: {naam} doet mee bij {pleknaam}
+
+Hoi {beheerder},
+
+{naam} heeft de uitnodiging voor {pleknaam} geaccepteerd.
+
+Bekijk jullie kring: {PLEK_URL}
+
+Groet,
+Rumaz

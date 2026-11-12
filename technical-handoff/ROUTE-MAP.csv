@@ -1,0 +1,49 @@
+﻿url,groep,doel,title,interne_links
+/afrekenen/,objects,Bestaande pagina behouden; afzonderlijk reviseren per cluster,Bestelling controleren | Rumaz,13
+/algemene-voorwaarden/,service,Juridisch actualiseren voor platform vóór livegang,Algemene voorwaarden | Rumaz,13
+/app/account/controleer-je-mail/,account,Uitleg bevestigingsmail,Controleer je e-mail | Rumaz,13
+/app/account/,account,Bestaande pagina behouden; afzonderlijk reviseren per cluster,Mijn account | Rumaz,1
+/app/account/inloggen/,account,Inloggen,Welkom terug | Rumaz,14
+/app/account/registreren/,account,"E-mail en wachtwoord, bevestiging",Maak jouw account | Rumaz,13
+/app/account/wachtwoord-instellen/,account,Geldige herstelsessie en nieuw wachtwoord,Nieuw wachtwoord instellen | Rumaz,12
+/app/account/wachtwoord-vergeten/,account,Veilige herstelmail aanvragen,Wachtwoord vergeten? | Rumaz,13
+/app/account/welkom/,account,Na bevestiging naar Mijn plekken,Welkom bij Rumaz | Rumaz,12
+/app/,platform,"Inloggen/demonstreren, plek en mensen centraal; sociale onderbalk",Mijn plekken | Rumaz — Jouw plekken. Jouw mensen.,0
+/bestelling/,objects,Bestaande pagina behouden; afzonderlijk reviseren per cluster,Betaalstatus | Rumaz,13
+/contact/,service,"Contact opnemen via mailto, geen nepformulier",Contact met Rumaz | Ideeën en samenwerken,12
+/diensten/,historisch,Bestaande pagina behouden; afzonderlijk reviseren per cluster,Diensten | Rumaz,13
+/diensten/korte-sprint/,historisch,Bestaande pagina behouden; afzonderlijk reviseren per cluster,Korte sprint | Rumaz,13
+/diensten/projectbasis/,historisch,Bestaande pagina behouden; afzonderlijk reviseren per cluster,Projectbasis | Rumaz,13
+/diensten/sparring/,historisch,Bestaande pagina behouden; afzonderlijk reviseren per cluster,Sparring | Rumaz,13
+/disclaimer/,service,Bestaande pagina behouden; afzonderlijk reviseren per cluster,Disclaimer | Rumaz,13
+/eigen-plek/,uitleg,"Uitleg voor eigenaar, start juiste plekformulier","Een eigen vakantiehuis, camper of boot delen | Rumaz",12
+/faq/,service,Bestaande pagina behouden; afzonderlijk reviseren per cluster,"Veelgestelde vragen over Rumaz | Plekken, agenda en privacy",12
+/gedeelde-plek/,uitleg,"Uitleg voor mede-gebruiker, start juiste plekformulier",Een familiehuis of gedeelde camper samen beheren | Rumaz,12
+/gehuurde-plek/,uitleg,"Uitleg huurder, start juiste plekformulier",Een gehuurd chalet of vakantiehuis samen organiseren | Rumaz,12
+/in-de-buurt/,uitleg,"Lokale tips, open juiste tab in plek",Lokale tips en UITagenda bij je vakantieplek | Rumaz,12
+/,publiek,"In 10 seconden snappen, één van vier situaties kiezen",Rumaz | Jouw plekken. Jouw mensen.,17
+/objects/de-bureaulader/,objects,Bestaande pagina behouden; afzonderlijk reviseren per cluster,De Bureaulader | Rumaz,13
+/objects/de-klok/,objects,Bestaande pagina behouden; afzonderlijk reviseren per cluster,De Klok | Rumaz,13
+/objects/de-wijnset/,objects,Bestaande pagina behouden; afzonderlijk reviseren per cluster,De Wijnset | Rumaz,13
+/objects/,objects,"Afzonderlijke productlijn bewaren, betalingen niet live",Objects | Rumaz,13
+/over/,service,Bestaande pagina behouden; afzonderlijk reviseren per cluster,Over Rumaz | Mensen en gedeelde plekken verbinden,12
+/privacy/,service,Verplicht actueel en accuraat voor echte accounts,Privacy | Rumaz,13
+/quickscan/,historisch,Bestaande pagina behouden; afzonderlijk reviseren per cluster,Rumaz Quickscan | Binnen 48 uur een concrete richting,13
+/rekenen/,historisch,Bestaande pagina behouden; afzonderlijk reviseren per cluster,Rekenen | Rumaz,13
+/rekenen/jaarkosten-onderneming/,historisch,Bestaande pagina behouden; afzonderlijk reviseren per cluster,Wat kost je onderneming? Rekentool | Rumaz,13
+/rekenen/pakket-of-losse-tools/,historisch,Bestaande pagina behouden; afzonderlijk reviseren per cluster,Pakket of losse tools? | Rumaz,13
+/rekenen/starterstack/,historisch,Bestaande pagina behouden; afzonderlijk reviseren per cluster,Starterstack | Rumaz,13
+/rekenen/zakelijk-of-prive/,historisch,Bestaande pagina behouden; afzonderlijk reviseren per cluster,Zakelijk of privé? | Rumaz,13
+/rekenen/zelf-doen-of-uitbesteden/,historisch,Bestaande pagina behouden; afzonderlijk reviseren per cluster,Zelf doen of uitbesteden? | Rumaz,13
+/start/,historisch,Bestaande pagina behouden; afzonderlijk reviseren per cluster,Starten | Rumaz,13
+/start/startercheck/,historisch,Bestaande pagina behouden; afzonderlijk reviseren per cluster,Startercheck | Rumaz,13
+/startklaar/,historisch,Bestaande pagina behouden; afzonderlijk reviseren per cluster,Rumaz Startklaar | Eenmanszaak compleet opgezet,13
+/transparantie/,service,Bestaande pagina behouden; afzonderlijk reviseren per cluster,"Transparantie bij Rumaz | Bronnen, privacy en advertenties",12
+/uitgezocht/eenmanszaak-kosten-per-jaar/,historisch,Bestaande pagina behouden; afzonderlijk reviseren per cluster,Kosten eenmanszaak per jaar | Rumaz,13
+/uitgezocht/,historisch,Bestaande pagina behouden; afzonderlijk reviseren per cluster,Uitgezocht | Rumaz,13
+/uitgezocht/zakelijke-email-eigen-domein/,historisch,Bestaande pagina behouden; afzonderlijk reviseren per cluster,Zakelijke e-mail met eigen domein | Rumaz,13
+/uitgezocht/zakelijke-rekening-zonder-vaste-kosten/,historisch,Bestaande pagina behouden; afzonderlijk reviseren per cluster,Zakelijke rekening zonder vaste kosten | Rumaz,13
+/voor-partners/,service,Samenwerking aanvragen via mailto,Samenwerken met Rumaz | Lokale UITagenda’s en activiteiten,12
+/winkelwagen/,objects,Bestaande pagina behouden; afzonderlijk reviseren per cluster,Winkelwagen | Rumaz,13
+/zo-werkt-het/,uitleg,Korte uitleg met doorklik naar vier routes,"Vakantiehuis, camper of chalet samen delen | Zo werkt Rumaz",16
+/404.html,service,Technische fout-/systeempagina; behouden,Pagina niet gevonden | Rumaz,0

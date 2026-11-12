@@ -1,0 +1,10 @@
+Onderwerp: Je verblijf bij {pleknaam} is bevestigd
+
+Hoi {aanvrager},
+
+Je aanvraag voor {pleknaam} van {aankomst} tot {vertrek} is goedgekeurd.
+
+Bekijk jullie agenda: {AGENDA_URL}
+
+Groet,
+Rumaz
