@@ -1,0 +1,40 @@
+{
+  "source": "Rumaz 3.0 RC5 site/ uit opgeslagen Work-overdracht",
+  "patches": [
+    {
+      "path": "eigen-plek/index.html",
+      "change": "Primaire CTA draagt gebruikerskeuze over aan de app, zonder extra pagina",
+      "sha256_before": "dd23a8d6b2567791235713836f675175531d9a8b9b60649e23c87357bddc6a44",
+      "sha256_after": "ae0b238bdf4d6b9a729454f6462e9002e3a6f743e434879bb186304a25e27665"
+    },
+    {
+      "path": "gedeelde-plek/index.html",
+      "change": "Primaire CTA draagt gebruikerskeuze over aan de app, zonder extra pagina",
+      "sha256_before": "78aa6e8db3f36fd6bf93f034a0fb96d3fb5eab84fc3c7759ee7c2147e3c85274",
+      "sha256_after": "3b51257ad5596fbc78f23dada4e54a492f1689c5c34288c7c7ca60b615ea27c6"
+    },
+    {
+      "path": "gehuurde-plek/index.html",
+      "change": "Primaire CTA draagt gebruikerskeuze over aan de app, zonder extra pagina",
+      "sha256_before": "ee9ae31969ca4c58fd63b715336bd22b4f0880855b18da050705a794b41a1043",
+      "sha256_after": "3bb82a4aacbb61d32f4a29b96f69f6805341f679c1730cc883888ce7ee0dac15"
+    },
+    {
+      "path": "in-de-buurt/index.html",
+      "change": "Primaire CTA draagt gebruikerskeuze over aan de app, zonder extra pagina",
+      "sha256_before": "f79d7ec2d88a84a961d234d99a295838c9d8659f352b1f65769ec467e532d891",
+      "sha256_after": "7ccf6e0c2c28ad33c1f915a2321aa3425ec6e2ee9a3a881b71518f9a26caa32f"
+    },
+    {
+      "path": "assets/js/rumaz3-social.js",
+      "change": "Ondersteunt ?start=own/shared/rent en #plek-buurt; geen autorisatie of gegevensopslag",
+      "sha256_before": "0b9e81c500e66a36dd09e0b2d8ad94b898562a4a5be6006b3efa48e4b414a4b1",
+      "sha256_after": "082c4fab2d758bc552275d83bd346f8d22c6111aa8207a727b4b86b87085c355"
+    }
+  ],
+  "rules": [
+    "Pas uitsluitend toe op overeenkomende RC5/Work-basis na hash-/diffcontrole",
+    "NOOIT blind op GitHub main v1.21",
+    "Geen nieuwe deploy zonder goedkeuring"
+  ]
+}

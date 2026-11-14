@@ -1,0 +1,12 @@
+Onderwerp: Welkom bij Rumaz
+
+Wat fijn dat je er bent, {voornaam}.
+
+Jouw plekken en jouw mensen horen bij elkaar. Voeg een plek toe of bekijk de uitnodiging die je hebt gekregen.
+
+Open Mijn plekken: {APP_URL}
+
+Groet,
+Rumaz
+
+Je ontvangt dit bericht omdat je een account hebt bevestigd.

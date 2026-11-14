@@ -1,0 +1,24 @@
+RuMaZ 2.0 — complete HTML-website
+
+34 HTML-pagina's met de bestaande huisstijl en sluitsteen.
+Geen framework en geen build nodig om de bijgeleverde HTML te bekijken.
+
+1. Pak de volledige map uit; behoud de mappenstructuur.
+2. Open index.html om de pagina's te bekijken.
+3. Voor de volledige winkelwagen: voer in deze map 'python3 start-preview.py' uit.
+   De browser opent http://127.0.0.1:8080/. Python 3 moet aanwezig zijn.
+   Dit serveert de bestanden alleen op je eigen computer.
+
+Via file:// verschilt opslag per browser en soms per pagina. Gebruik daarom
+de lokale server voor toevoegen, bewaren, wijzigen en verwijderen.
+
+De Klok en De Bureaulader zijn personaliseerbaar als voorlopige selectie.
+De Wijnset heeft de status Binnenkort beschikbaar.
+Prijzen, foto's, levertijden en verzendtarieven moeten nog worden bevestigd.
+Afrekenen is geblokkeerd. Dit HTML-pakket verwerkt geen betalingen.
+Een veilige betaalfunctie vereist de aparte servercode en testconfiguratie.
+
+De map ontwikkelbron in de ZIP bevat de bewerkbare bron, tests en de voorbereide
+Netlify-serverfuncties. De HTML-website staat in de map website.
+Alle pagina's staan op noindex. Niet rechtstreeks over de productieomgeving zetten.
+Er is niets gepubliceerd en geen live betaalfunctie ingeschakeld.

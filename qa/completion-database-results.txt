@@ -1,0 +1,3 @@
+12 november 2026 — Supabase lwqttzzyzfvxqerltmoi / PostgreSQL 17
+PASS: schema, owner events/attendance/likes, outsider isolation including photo metadata, client queue access denied
+completion.sql en completion-security.sql binnen één transactie; COMMIT weggelaten en ROLLBACK uitgevoerd. Niet geïnstalleerd.

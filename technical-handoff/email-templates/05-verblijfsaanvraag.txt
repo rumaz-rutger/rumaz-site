@@ -1,0 +1,12 @@
+Onderwerp: Verblijfsaanvraag voor {pleknaam}
+
+Hoi {beheerder},
+
+{aanvrager} wil naar {pleknaam} van {aankomst} tot {vertrek}.
+
+Open de aanvraag: {AANVRAAG_URL}
+
+Je kunt na het inloggen goedkeuren of afwijzen. De aanvraag is nog niet bevestigd.
+
+Groet,
+Rumaz

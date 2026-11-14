@@ -1,0 +1,15 @@
+(node:13) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ existing short password is submitted for login, not rejected by signup rules (9.922018ms)
+✔ ordinary session cannot reset password (2.458423ms)
+✔ recovery session updates password then signs out (2.46961ms)
+✔ welcome page validates user without a form submission (3.735247ms)
+✔ unconfirmed login never enters app (2.34966ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 165.737312

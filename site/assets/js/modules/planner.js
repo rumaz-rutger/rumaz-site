@@ -1,0 +1,11 @@
+window.RumazViews=window.RumazViews||{};
+window.RumazViews.planner=function(p,{getPlanner,visualHeader,esc}){
+  const groups=[['aankomst','Aankomst','Voor je de deur opendoet'],['verblijf','Tijdens verblijf','Alles wat het makkelijker maakt'],['vertrek','Vertrek','Samen goed afsluiten'],['taken','Nog te doen','Kleine klussen en afspraken']];
+  const tasks=getPlanner(p);
+  return `${visualHeader('planner','Goed voorbereid op pad.','Aankomen, genieten, vertrekken. Vink samen af wat nodig is.')}
+   <div class="rz-plan-progress"><div><span>Jullie overzicht</span><strong>${tasks.filter(t=>t.done).length} van ${tasks.length} afgevinkt</strong></div><div class="rz-progress-track"><span style="width:${tasks.length?Math.round(100*tasks.filter(t=>t.done).length/tasks.length):0}%"></span></div></div>
+   <div class="rz-plan-sections">${groups.map(([id,title,subtitle])=>`<section class="rz-plan-section"><header><span class="rz-phase-symbol">${{aankomst:'⌂',verblijf:'◇',vertrek:'↗',taken:'✓'}[id]}</span><div><h3>${title}</h3><p>${subtitle}</p></div></header><div>${tasks.filter(t=>t.phase===id).map(t=>`<label class="rz-task ${t.done?'is-done':''}"><input type="checkbox" data-plan-toggle="${esc(t.id)}" ${t.done?'checked':''}><span>${esc(t.text)}</span></label>`).join('')||'<p class="rz-empty-task">Nog geen taken. Voeg zelf iets toe.</p>'}</div></section>`).join('')}</div>
+   <details class="rz-add-task"><summary>+ Zelf een taak toevoegen</summary><form id="newPlannerForm"><label class="form-field"><span>Wat moet er gebeuren?</span><input id="plannerText" maxlength="130" required placeholder="Bijvoorbeeld: beddengoed meenemen"></label><label class="form-field"><span>Wanneer?</span><select id="plannerPhase"><option value="aankomst">Aankomst</option><option value="verblijf">Tijdens verblijf</option><option value="vertrek">Vertrek</option><option value="taken">Nog te doen</option></select></label><button class="btn" type="submit">Toevoegen</button></form></details>
+   <button class="rz-text-action rz-nearby-link" data-switch-part="handleiding">Zoek je een instructie? Bekijk de handleiding →</button>
+   <p class="rz-subtle-alert">Voorbeeldchecklist. Vul zelf aan wat bij jullie plek hoort. Bewaar hier geen toegangscodes.</p>`;
+ };

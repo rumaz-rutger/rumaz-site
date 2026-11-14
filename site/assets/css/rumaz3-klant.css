@@ -1,0 +1,91 @@
+/* Rumaz 3.0 · Klantgerichte grafische laag, 2026-11-11.
+ * Alleen presentatie. De bestaande sluitsteen, vijf illustratiekleuren en social bar blijven.
+ * Onderliggend CSS en modules zijn behouden; verwijder deze laag om veilig terug te vallen.
+ */
+:root{--rz-forest:#082c22;--rz-dark:#041d16;--rz-mid:#17483b;--rz-cream:#f2ebde;--rz-paper:#fbf8f1}
+/* Heldere typografie, minder stapels identieke panelen */
+.page .eyebrow{letter-spacing:.14em;font-size:10px}.page p{line-height:1.52}
+.editorial-hero{grid-template-columns:minmax(0,.93fr) minmax(0,1.07fr)}
+.editorial-hero .hero-lead{max-width:31ch;font-size:clamp(17px,2.1vw,22px);line-height:1.4}
+.editorial-hero .hero-small{max-width:46ch;font-size:13px;line-height:1.6;opacity:.85}
+.four-routes .section-intro{max-width:38ch;margin-top:10px;font-size:15px;line-height:1.5}
+.route-grid{gap:0!important;border-top:1px solid var(--green)!important;border-bottom:1px solid var(--green)!important}
+.route-tile{border:0!important;border-right:1px solid var(--line)!important;border-bottom:1px solid var(--line)!important;border-radius:0!important;box-shadow:none!important;background:transparent!important;min-height:0!important}
+.route-tile .route-art{border-radius:0!important;overflow:hidden;margin:0 0 12px!important;background:var(--ivory);}
+.route-tile .route-art img{width:100%;object-fit:contain;display:block;aspect-ratio:1.55/1}
+.route-tile h3{font-size:clamp(23px,2.7vw,30px);line-height:1.13;margin:6px 0!important}
+.route-tile p{font-size:13px!important;line-height:1.47!important;max-width:38ch!important;min-height:0!important;margin-bottom:16px!important}
+.route-tile button.route-link{border-top:1px solid var(--green)!important;border-radius:0!important;font-size:12px!important;background:transparent!important;padding:12px 0!important}
+.route-link-secondary{border:0!important;font-size:11px!important;opacity:.75}
+.rz-journey-line{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--line);padding-top:24px;margin-top:27px}
+.rz-journey-line span{font:500 13px/1.35 var(--sans);padding:0 12px;position:relative}
+.rz-journey-line span:not(:last-child):after{content:'→';position:absolute;right:-3px;color:var(--green)}
+.editorial-quote{align-items:center!important}.editorial-quote blockquote{font-size:clamp(26px,3.8vw,44px)!important}
+/* Member Home: same four illustrated actions; no extra high-level menu */
+.rz-member-shortcuts{margin:29px 0 27px}.rz-title-line{display:flex;justify-content:space-between;align-items:baseline;gap:10px;border-bottom:1px solid var(--green);margin-bottom:12px}.rz-title-line h2{font:400 clamp(24px,3vw,36px)/1.2 var(--serif);margin:0 0 12px}.rz-title-line span{font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--muted)}
+.rz-shortcuts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0}
+.rz-shortcuts>button{border:0;border-right:1px solid var(--line);background:transparent;text-align:left;padding:0 11px 14px;color:var(--green);min-width:0;display:flex;flex-direction:column;align-items:stretch;gap:6px;cursor:pointer}
+.rz-shortcuts>button:first-child{padding-left:0}.rz-shortcuts>button:last-child{border-right:0}
+.rz-shortcuts img{width:100%;aspect-ratio:1.55/1;object-fit:cover;display:block;background:var(--ivory);margin-bottom:5px}
+.rz-shortcuts strong{font:400 clamp(16px,2vw,21px)/1.17 var(--serif)}.rz-shortcuts small{font:500 11px/1.3 var(--sans);color:var(--green)}
+.rz-shortcuts button:hover img,.rz-action-four button:hover img{filter:brightness(.95)}
+/* Place Home = familiar brand + four functional illustrated gateways */
+.rz-place-welcome{padding:16px 0 9px}.rz-place-welcome h2{font:400 clamp(30px,4vw,44px)/1.05 var(--serif);margin:4px 0 10px;color:var(--green)}.rz-place-welcome p:last-child{font-size:13px;margin:0 0 16px;max-width:45ch}
+.rz-action-four{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-top:1px solid var(--green);border-bottom:1px solid var(--green);gap:0}
+.rz-action-four>button{appearance:none;border:0;border-bottom:1px solid var(--line);background:transparent;text-align:left;padding:13px 17px 17px 0;min-width:0;display:flex;flex-direction:column;cursor:pointer;color:var(--ink)}
+.rz-action-four>button:nth-child(odd){border-right:1px solid var(--line)}.rz-action-four>button:nth-child(even){padding-left:17px;padding-right:0}
+.rz-action-four>button:nth-child(n+3){border-bottom:0}
+.rz-action-four img{width:100%;aspect-ratio:1.88/1;object-fit:cover;background:var(--ivory);display:block;margin-bottom:11px}
+.rz-action-four strong{font:400 clamp(23px,3.3vw,32px)/1.1 var(--serif);color:var(--green);margin-bottom:7px}
+.rz-action-four span{font:600 12px/1.3 var(--sans);color:var(--green);text-decoration:underline;text-underline-offset:4px}
+.rz-place-updates{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--line);margin:21px 0;padding:0 0 18px;gap:20px}
+.rz-place-updates>div{min-width:0}.rz-place-updates>div:first-child{border-right:1px solid var(--line)}.rz-place-updates strong{display:block;font:400 clamp(16px,2.4vw,22px)/1.3 var(--serif);max-width:31ch;overflow-wrap:anywhere}
+.rz-text-action{display:inline-block;background:none;border:0;padding:7px 0 0;color:var(--green);font:700 12px/1.4 var(--sans);text-decoration:underline;text-underline-offset:4px;cursor:pointer;text-align:left}
+.rz-inline-flag{border-left:3px solid var(--green);padding:9px 13px;background:var(--ivory);text-align:left;font-size:12px;color:var(--green);width:100%;cursor:pointer}
+.rz-live-quote{margin:24px 0 16px;padding:22px 0 16px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.rz-live-quote>span{font:700 10px/1 var(--sans);letter-spacing:.12em;color:var(--muted)}.rz-live-quote>p{font:italic 400 clamp(20px,3vw,26px)/1.3 var(--serif);max-width:49ch;margin:10px 0}.rz-nearby-link{margin:14px 0 25px}
+.detail-grid{grid-template-columns:minmax(0,1fr) minmax(210px,250px)}
+.detail-grid .detail-card{border-radius:2px;box-shadow:none;background:var(--paper);border-color:var(--line)}
+.detail-top{border-radius:3px}.detail-nav{border-bottom:1px solid var(--line);margin-bottom:12px;padding-bottom:6px}.detail-nav button{border-radius:2px}
+.detail-top .eyebrow{letter-spacing:.12em}.detail-top .demo-mark{border-radius:2px}
+#placeAside{border-top:3px solid var(--green)!important}
+/* Same visual masthead in calendar, planner, feed and guide */
+.rz-visual-header{margin:0 0 22px;display:grid;grid-template-columns:48% 1fr;gap:23px;align-items:center;border-bottom:1px solid var(--green);padding:0 0 18px}
+.rz-visual-header img{display:block;width:100%;aspect-ratio:1.87/1;object-fit:cover;background:var(--ivory)}
+.rz-visual-header h2{font:400 clamp(27px,3.5vw,43px)/1.08 var(--serif);margin:5px 0 9px;color:var(--green)}
+.rz-visual-header p{max-width:28ch;font-size:13px!important;line-height:1.5!important;margin:0;color:var(--muted)}
+.rz-post-composer{padding:14px 0 18px;border-bottom:1px solid var(--line)}.rz-post-composer h3{font:400 23px/1.2 var(--serif)}
+.rz-feed-heading{display:flex;align-items:baseline;justify-content:space-between;margin:30px 0 9px;border-bottom:1px solid var(--line)}.rz-feed-heading h3{font:400 25px/1.2 var(--serif);margin:0 0 12px}.rz-feed-heading small{font-size:11px;color:var(--muted)}
+.rz-feed-list .demo-post{border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent;margin:0;padding:20px 0}.rz-feed-list .demo-post .a-row button{border-radius:2px}
+.rz-feed-list .demo-post p{font:400 16px/1.5 var(--serif)}
+/* Planner: phase sections and usable checklist, readable without card overload */
+.rz-plan-progress{margin:10px 0 20px}.rz-plan-progress>div:first-child{display:flex;justify-content:space-between;gap:8px;font-size:12px;margin:0 0 9px}.rz-plan-progress strong{color:var(--green)}
+.rz-progress-track{background:var(--ivory);height:7px;overflow:hidden}.rz-progress-track span{display:block;height:100%;background:var(--green);transition:width .2s}
+.rz-plan-sections{display:grid;grid-template-columns:1fr 1fr;gap:24px 19px}.rz-plan-section{border-top:2px solid var(--green);padding-top:16px}.rz-plan-section>header{display:flex;align-items:center;gap:11px;margin-bottom:15px}
+.rz-phase-symbol{width:36px;height:36px;background:var(--ivory);display:grid;place-items:center;color:var(--green);font:22px var(--serif);flex-shrink:0}
+.rz-plan-section h3{font:400 25px/1.1 var(--serif);margin:0}.rz-plan-section header p{color:var(--muted);font:11px/1.4 var(--sans);margin:4px 0 0}
+.rz-task{display:flex;gap:10px;align-items:start;font-size:13px;line-height:1.5;padding:11px 0;border-bottom:1px solid var(--line);cursor:pointer}.rz-task input{accent-color:var(--green);width:16px;height:16px;margin-top:2px;flex-shrink:0}.rz-task.is-done span{text-decoration:line-through;color:var(--muted)}
+.rz-empty-task{font-size:12px!important;color:var(--muted)}.rz-add-task{margin:24px 0;border-top:1px solid var(--green);border-bottom:1px solid var(--green);padding:14px 0}.rz-add-task summary{font-weight:700;color:var(--green);font-size:13px;cursor:pointer}.rz-add-task form{padding:14px 0}
+.rz-subtle-alert{color:var(--muted);font-size:11px!important;padding-top:10px;border-top:1px solid var(--line)}
+/* Calendar, editorial rather than dashboard. Keep booking logic and status contrast. */
+.rz-month{border:1px solid var(--line);border-radius:2px!important;overflow:hidden}
+.rz-day{border-radius:0!important}.rz-day:focus-visible,.rz-action-four button:focus-visible,.rz-shortcuts button:focus-visible{outline:3px solid var(--green);outline-offset:2px}
+.rz-legend{font-size:12px!important}.rz-cal-message{font-size:11px!important;color:var(--muted)!important}
+.rz-mini-email{border-radius:2px!important}
+/* Existing public site: rich but not long. Same illustrations. */
+.rz-public-vignettes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin:42px auto 8px;border-top:1px solid var(--green);border-bottom:1px solid var(--green)}
+.rz-public-vignettes a{display:flex;flex-direction:column;gap:8px;text-decoration:none;color:var(--green);padding:15px;border-right:1px solid var(--line)}.rz-public-vignettes a:first-child{padding-left:0}.rz-public-vignettes a:last-child{border-right:0;padding-right:0}
+.rz-public-vignettes img{width:100%;aspect-ratio:2/1;object-fit:cover;background:var(--ivory)}.rz-public-vignettes strong{font:400 clamp(22px,3vw,30px)/1.15 var(--serif)}.rz-public-vignettes small{font:600 12px/1.4 var(--sans);text-decoration:underline;text-underline-offset:3px}
+@media(max-width:900px){.rz-shortcuts{grid-template-columns:1fr 1fr;gap:12px}.rz-shortcuts>button{border:0;padding:0 0 10px!important}.rz-visual-header{grid-template-columns:42% 1fr}.detail-grid{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:640px){.route-grid{grid-template-columns:1fr}.route-tile{padding:16px 0!important;border-right:0!important}.route-tile .route-art img{aspect-ratio:2.3/1;object-fit:cover}.route-tile h3{font-size:26px}.route-tile p{font-size:13px!important;max-width:44ch!important}.route-tile .route-art{max-height:175px}.rz-journey-line{font-size:12px}.rz-journey-line span{padding:0 10px}
+ .rz-member-shortcuts{margin:22px 0}.rz-shortcuts{gap:13px 10px}.rz-shortcuts img{aspect-ratio:1.6/1}.rz-shortcuts strong{font-size:20px}
+ .rz-action-four>button{padding:9px 9px 12px 0!important}.rz-action-four>button:nth-child(even){padding-left:9px!important}.rz-action-four img{aspect-ratio:1.5/1}.rz-action-four strong{font-size:20px}.rz-action-four span{font-size:10px}
+ .rz-visual-header{grid-template-columns:1fr;gap:10px}.rz-visual-header img{max-height:175px;object-fit:cover;aspect-ratio:2.1/1}.rz-visual-header h2{font-size:32px}.rz-visual-header p{font-size:13px!important;max-width:42ch}
+ .rz-plan-sections{grid-template-columns:1fr;gap:16px}.rz-place-updates{gap:13px}.rz-place-updates strong{font-size:18px}
+ .rz-public-vignettes{grid-template-columns:1fr}.rz-public-vignettes a{border-right:0;border-bottom:1px solid var(--line);padding:14px 0!important}.rz-public-vignettes img{aspect-ratio:2.8/1}.rz-public-vignettes a:last-child{border-bottom:0}
+}
+/* The secondary right-hand column is a compact doorway, not a second dashboard. */
+.rz-aside-graphic{width:100%;aspect-ratio:1.85/1;display:block;object-fit:cover;margin:17px 0;background:var(--ivory)}
+.rz-aside-link{display:block;text-align:left;width:100%;border:0;border-bottom:1px solid var(--line);padding:14px 0;background:transparent;color:var(--green);font:700 13px/1.4 var(--sans);cursor:pointer}
+.rz-aside-foot{font:italic 14px/1.5 var(--serif)!important;margin-top:19px!important}
+.only-member .post{border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent;padding:16px 0;margin:0}
+@media(max-width:900px){#placeAside{display:none}}

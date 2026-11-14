@@ -1,0 +1,21 @@
+✔ Missing product/tax/shipping values never become free checkout (2.381057ms)
+✔ VAT including shipping and quantities calculated in cents (0.996136ms)
+✔ Rounding remains consistent at line level (0.326617ms)
+✔ Client prices are ignored (0.296872ms)
+✔ Identical personalizations merge, different personalizations stay distinct (0.516665ms)
+✔ Invalid product, variant, quantities, country and personalization rejected (2.232467ms)
+✔ Customer validation rejects invalid delivery data (0.731174ms)
+✔ Mollie adapter rejects live keys before any network request (0.67117ms)
+✔ Mollie payload contains server amount, stable idempotency and test guard (6.660839ms)
+✔ Checkout, durable storage, retries, verified webhook, protected confirmation (882.018111ms)
+✔ Unverified payment amount does not mark an order paid (3.393538ms)
+✔ Disabled checkout never contacts payment provider (0.427354ms)
+✔ A delayed webhook cannot erase an existing checkout URL (1.538635ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1262.316551

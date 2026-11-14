@@ -1,4 +1,5 @@
-name: Import RuMaZ FINAL
+
+name: RuMaZ RC5 veilige bronimport
 
 on:
   workflow_dispatch:
@@ -7,30 +8,34 @@ permissions:
   contents: write
 
 jobs:
-  import:
+  import-rc5:
+    if: github.ref == 'refs/heads/release/rumaz-3.0-rc5'
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
+      - name: Checkout releasebranch
         uses: actions/checkout@v4
 
-      - name: Import v1.21 FINAL
+      - name: Controleer en pak RC5 uit
+        shell: bash
         run: |
-          mkdir -p /tmp/rumaz-final
-          unzip -q RuMaZ-FINAL-v1.21.zip -d /tmp/rumaz-final
+          set -euo pipefail
+          archive='Rumaz-RC5-integratiecheck-en-voorbereiding.zip'
+          test -f "$archive"
+          unzip -tq "$archive"
+          unzip -oq "$archive" -x '.github/workflows/*'
+          test -f START-HIER.md
+          test -f site/index.html
+          test -f netlify.toml
+          test -f package.json
+          test -f backend/completion.sql
 
-          rsync -av --delete \
-            --exclude='.git/' \
-            --exclude='.github/' \
-            /tmp/rumaz-final/ ./
-
-          rm -f RuMaZ-FINAL-v1.21.zip
-          rm -f CNAME
-
-      - name: Commit FINAL site
+      - name: Commit uitsluitend op releasebranch
+        shell: bash
         run: |
-          git config user.name "RuMaZ deploy"
-          git config user.email "actions@github.com"
+          set -euo pipefail
+          git config user.name 'RuMaZ RC5 import'
+          git config user.email 'actions@users.noreply.github.com'
           git add -A
-          git commit -m "RuMaZ v1.21 FINAL" || exit 0
-          git push
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Import RuMaZ RC5 bestaande broncode'
+          git push origin HEAD:refs/heads/release/rumaz-3.0-rc5

@@ -1,0 +1,10 @@
+Onderwerp: Bericht over je aanvraag voor {pleknaam}
+
+Hoi {aanvrager},
+
+Je aanvraag voor {pleknaam} van {aankomst} tot {vertrek} is niet goedgekeurd.
+
+Bekijk andere beschikbare dagen: {AGENDA_URL}
+
+Groet,
+Rumaz

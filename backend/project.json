@@ -1,0 +1,11 @@
+{
+  "project_id": "lwqttzzyzfvxqerltmoi",
+  "name": "rumaz-staging",
+  "organization": "Rumaz",
+  "region": "eu-central-1",
+  "url": "https://lwqttzzyzfvxqerltmoi.supabase.co",
+  "status": "ACTIVE_HEALTHY",
+  "schema_applied": true,
+  "migration_name": "rumaz_core_with_place_authorization",
+  "migration_version": "20261111111820"
+}

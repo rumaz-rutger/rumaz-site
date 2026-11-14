@@ -1,0 +1,2 @@
+Staging build PASS; productieconfiguratie lokaal PASS; geen deploy.
+17 unit/DOM tests PASS; 22 JS-module syntaxchecks PASS; 2 serverfunctions bundelen PASS.

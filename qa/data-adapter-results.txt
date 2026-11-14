@@ -1,0 +1,12 @@
+✔ unconfirmed user never loads private tables (1.608038ms)
+✔ server booking refusal is propagated rather than reporting success (0.586706ms)
+✔ task update requires a returned authorized row (0.196366ms)
+✔ post authorship comes from authenticated identity (0.352212ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 108.026307

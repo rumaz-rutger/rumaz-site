@@ -1,0 +1,20 @@
+import {cp,mkdir,readFile,writeFile,rm} from 'node:fs/promises';
+const production=process.env.RUMAZ_ENV==='production';
+const origin=process.env.RUMAZ_SITE_ORIGIN||'https://rumaz-staging.netlify.app';
+const url=process.env.SUPABASE_URL||'https://lwqttzzyzfvxqerltmoi.supabase.co';
+const key=process.env.SUPABASE_PUBLISHABLE_KEY||'sb_publishable_bPLRFUxWgeQa18is_A9_Kw_C-D6T4cg';
+if(new URL(origin).protocol!=='https:'||new URL(origin).pathname!=='/'||new URL(url).protocol!=='https:')throw Error('Ongeldige origin');
+if(production&&(origin!=='https://rumaz.nl'||process.env.RUMAZ_RELEASE_APPROVED!=='yes'))throw Error('Productie vereist rumaz.nl en RUMAZ_RELEASE_APPROVED=yes na stagingtest');
+if(!production&&origin!=='https://rumaz-staging.netlify.app')throw Error('Gebruik het bestaande stagingproject');
+if(!key.startsWith('sb_publishable_'))throw Error('Gebruik uitsluitend een publishable key');
+await rm('dist',{recursive:true,force:true});await mkdir('dist');await cp('site','dist',{recursive:true});
+await writeFile('dist/assets/js/rumaz3-auth-config.js','window.RUMAZ_AUTH_CONFIG = Object.freeze('+JSON.stringify({enabled:true,siteOrigin:origin,supabaseUrl:url,supabaseAnonKey:key})+');\n');
+let headers=await readFile('site/_headers','utf8');headers=headers.replace("img-src 'self' data:",`img-src 'self' data: ${new URL(url).origin}`);headers=headers.replace("connect-src 'self'",`connect-src 'self' ${new URL(url).origin}`);
+if(production)headers=headers.replace('  X-Robots-Tag: noindex, nofollow\n','')+'\n/app/*\n  X-Robots-Tag: noindex, nofollow\n';
+await writeFile('dist/_headers',headers);
+await writeFile('dist/robots.txt',production?'User-agent: *\nAllow: /\nDisallow: /app/\nSitemap: https://rumaz.nl/sitemap.xml\n':'User-agent: *\nDisallow: /\n');
+console.log('Gebouwd:',production?'productie':'staging','→ dist. Niet gedeployd.');
+
+const names={invitation:'04-uitnodiging',booking_request:'05-verblijfsaanvraag',booking_approved:'06-verblijf-bevestigd',booking_rejected:'07-verblijf-afgewezen'};
+const templates={};for(const [key,file] of Object.entries(names))templates[key]=await readFile('technical-handoff/email-templates/'+file+'.txt','utf8');
+const old=await readFile('server/templates.mjs','utf8');await writeFile('server/templates.mjs','const templates='+JSON.stringify(templates)+';\n'+old.slice(old.indexOf('export function')));

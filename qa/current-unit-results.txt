@@ -1,0 +1,36 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> test
+> node --experimental-vm-modules --test qa/*.test.mjs
+
+(node:28) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ existing short password is submitted for login, not rejected by signup rules (9.372281ms)
+✔ ordinary session cannot reset password (2.567062ms)
+✔ recovery session updates password then signs out (3.053647ms)
+✔ welcome page validates user without a form submission (3.17582ms)
+✔ unconfirmed login never enters app (3.595186ms)
+✔ unconfirmed user never loads private tables (1.80455ms)
+✔ server booking refusal is propagated rather than reporting success (0.887965ms)
+✔ task update requires a returned authorized row (0.265227ms)
+✔ post authorship comes from authenticated identity (0.682016ms)
+(node:30) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ mail templates substitute literal data, never executable markup (2.121978ms)
+✔ notification endpoint rejects missing bearer and foreign origin (2.925364ms)
+✔ test mail cannot send to a different recipient or multiple addresses (0.995029ms)
+✔ SMTP failure revokes invitation and never reports success (14.546989ms)
+✔ successful invitation returns no reusable token (4.831464ms)
+(node:32) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ RC5 authenticated DOM renders five nav tabs and month, switches places, saves requests (455.751328ms)
+✔ RC5 planner and invitation use backend and contain no fake member insertion (174.224539ms)
+✔ all independent RC5 sections render without missing dependencies (189.425096ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2191.174533
