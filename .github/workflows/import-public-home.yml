@@ -1,0 +1,168 @@
+name: Rumaz 3.1 - bestaande Home op hoofddomein (staging)
+
+on:
+  push:
+    branches:
+      - feat/rumaz-homepage-3-1
+    paths:
+      - .github/workflows/import-public-home.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: rumaz-public-home-import
+  cancel-in-progress: false
+
+jobs:
+  public-home:
+    if: github.repository == 'rumaz-rutger/rumaz-site' && github.ref == 'refs/heads/feat/rumaz-homepage-3-1'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      RUMAZ_ENV: staging
+      RUMAZ_SITE_ORIGIN: https://rumaz-staging.netlify.app
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Controleer de enige actuele bron en bescherm productie
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = 'refs/heads/feat/rumaz-homepage-3-1'
+          test "$(git branch --show-current)" = 'feat/rumaz-homepage-3-1'
+          git fetch origin main
+          test "$(git rev-parse FETCH_HEAD)" = 'd9a8cb15ae7dc1c7c49d315b23454470454988bc'
+          git merge-base --is-ancestor '7a63e032c27f97004d430219c0541edb9ae76a7d' HEAD
+          test "$(git hash-object site/app/index.html)" = '312fbf8447ecda50e21dfd871c9e83dfa8318646'
+          test "$(git hash-object site/index.html)" = 'd28286f7f35254761907813f425bb4ccce8be0e6'
+          test -z "$(git status --porcelain)"
+          test "$(git diff --name-only '7a63e032c27f97004d430219c0541edb9ae76a7d' HEAD)" = '.github/workflows/import-public-home.yml'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Installeer bestaande dependencies
+        run: npm ci
+      - name: Zet de goedgekeurde app-Home om naar publieke Home
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import {readFileSync, writeFileSync} from 'node:fs';
+          import {JSDOM} from 'jsdom';
+
+          const repoApp = readFileSync('site/app/index.html', 'utf8');
+          const oldPublic = readFileSync('site/index.html', 'utf8');
+          const navSource = readFileSync('site/assets/js/rumaz3-social.js', 'utf8');
+          const app = new JSDOM(repoApp).window.document;
+          const old = new JSDOM(oldPublic).window.document;
+
+          // The already approved Home from the actual app is the only source of its content.
+          const sourceHome = app.querySelector('#home');
+          assert(sourceHome, 'Bestaande app Home ontbreekt');
+          const pieces = ['.homepage-intro', '.home-choices', '.home-together', '.home-footer'];
+          const blocks = pieces.map(selector => {
+            const el = sourceHome.querySelector(selector);
+            assert(el, `Bestaand Home-onderdeel ontbreekt: ${selector}`);
+            return el.outerHTML.replaceAll('RuMaZ', 'Rumaz');
+          });
+          const cards = [...sourceHome.querySelectorAll('.home-choices [data-place-intent]')];
+          const types = ['woning', 'appartement', 'huisje', 'camper', 'caravan', 'boot'];
+          assert.deepEqual(cards.map(x => x.dataset.placeIntent), types, 'Goedkeurde zes kaarten/volgorde gewijzigd');
+          for (const card of cards) {
+            assert.equal(card.getAttribute('href'), `/app/account/registreren/?pleksoort=${card.dataset.placeIntent}`);
+            const img = card.closest('.place-choice')?.querySelector('img');
+            assert.equal(img?.getAttribute('src'), `/assets/img/home-${card.dataset.placeIntent}.webp`);
+          }
+          const sprite = app.querySelector('body > svg[aria-hidden="true"]');
+          assert(sprite, 'Bestaande SVG-iconen ontbreken');
+          const realHeader = app.querySelector('.top');
+          assert(realHeader, 'Bestaande Rumaz 3.1-header ontbreekt');
+          const header = realHeader.cloneNode(true);
+          const brand = header.querySelector('.brand');
+          assert(brand, 'Originele sluitsteen ontbreekt');
+          const a = app.createElement('a');
+          a.className = 'brand';
+          a.href = '/';
+          a.setAttribute('aria-label', 'Rumaz home');
+          a.innerHTML = brand.innerHTML.replaceAll('RuMaZ', 'Rumaz');
+          brand.replaceWith(a);
+          const topAction = header.querySelector('.top-action');
+          assert(topAction, 'Headeraccountnavigatie ontbreekt');
+          topAction.innerHTML = '<div class="switch" aria-label="Account"><a class="rz-public-switch active" href="/" aria-current="page">Bezoeker</a><a class="rz-public-switch" href="/app/">Mijn Rumaz</a></div>';
+
+          const labels = [
+           ['home','Home','i-home','/'],
+           ['plekken','Plekken','i-layers','/app/#plekken'],
+           ['plek','Mijn plek','i-keystone','/app/#plek'],
+           ['berichten','Berichten','i-chat','/app/#berichten'],
+           ['profiel','Mijn omgeving','i-user','/app/#profiel']
+          ];
+          assert(navSource.includes("['home','Home','i-home']") && navSource.includes("['profiel','Mijn omgeving','i-user']"), 'Bestaande socialbalk wijkt af');
+          const nav = labels.map(([id,label,icon,url])=>
+           `<a class="tab ${id==='home'?'active':''}" data-nav="${id}" href="${url}" aria-label="${label}" ${id==='home'?'aria-current="page"':''}><svg class="symbol" aria-hidden="true"><use href="#${icon}"/></svg><span class="tab-name">${label}</span></a>`
+          ).join('');
+
+          // Preserve the existing public canonical, metadata, structured data and icons.
+          const head = old.head.cloneNode(true);
+          for (const css of [...head.querySelectorAll('link[rel="stylesheet"]')]) css.remove();
+          for (const href of ['/assets/css/rumaz3-social.css','/assets/css/rumaz3-klant.css','/assets/css/rumaz3-finale-app.css']) {
+           const link=old.createElement('link'); link.rel='stylesheet'; link.href=href; head.append(link);
+          }
+          const style=old.createElement('style');
+          style.textContent=`
+          /* Only the missing link treatment; all visual layout comes from existing app CSS. */
+          a.brand,a.tab{text-decoration:none}
+          .switch .rz-public-switch{display:flex;align-items:center;justify-content:center;min-height:44px;padding:7px 10px;border-radius:20px;font-size:12px;text-decoration:none;color:#565853}
+          .switch .rz-public-switch.active{background:var(--green);color:var(--ivory)}
+          a.tab:focus-visible,a.brand:focus-visible,.rz-public-switch:focus-visible{outline:3px solid #92bbac;outline-offset:3px}
+          @media(max-width:420px){.switch .rz-public-switch{font-size:10px;padding:7px 8px}}
+          `;
+          head.append(style);
+          for (const block of head.querySelectorAll('script[type="application/ld+json"]')) {
+           const schema=JSON.parse(block.textContent);
+           for(const item of schema['@graph']||[]){if(item.alternateName==='RuMaZ') delete item.alternateName;}
+           block.textContent=JSON.stringify(schema);
+          }
+          const html = `<!doctype html>\n<html lang="nl">\n${head.outerHTML}\n<body class="guest">\n${sprite.outerHTML}\n<div class="shell">\n${header.outerHTML}\n<div class="body-layout"><aside class="aside"><nav aria-label="Hoofdnavigatie" id="desktopNav">${nav}</nav><p class="aside-signoff">De plek brengt jullie samen. De herinneringen blijven.</p></aside><main class="content" id="inhoud"><section class="page current" data-page="home" id="home">\n${blocks.join('\n')}\n</section></main></div></div>\n<nav aria-label="Hoofdnavigatie" class="bottom" id="bottomNav">${nav}</nav>\n</body></html>\n`;
+          const rendered = new JSDOM(html).window.document;
+          assert.equal(rendered.querySelectorAll('#home .place-choice').length, 6);
+          assert.equal(rendered.querySelectorAll('#bottomNav a.tab').length, 5);
+          assert.equal(rendered.querySelectorAll('#desktopNav a.tab').length, 5);
+          assert.equal(rendered.querySelector('link[rel="canonical"]')?.href, 'https://rumaz.nl/');
+          assert.equal(rendered.querySelector('meta[name="robots"]')?.content,'index,follow');
+          assert.equal(rendered.querySelectorAll('#home h1').length,1);
+          assert(!rendered.querySelector('form[data-auth-action]'), 'Registratie mag niet voor de plekkeuze verschijnen');
+          assert(!rendered.querySelector('script[src*="rumaz3-social.js"]'), 'Geen dubbele app- of Supabase-initialisatie op publieke Home');
+          writeFileSync('site/index.html', html);
+          console.log('Publieke Home opgebouwd vanuit de bestaande goedgekeurde app-Home: 6 kaarten, 5 navigatielinks, originele header en SEO op /.');
+          NODE
+          git diff --check
+          git diff --stat
+      - name: Test SEO, links en bestaande code en bouw alleen staging
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm test
+          python3 qa/check-static.py
+          npm run build
+          test -f dist/index.html
+          grep -Fq 'https://rumaz.nl/' dist/index.html
+          grep -Fq 'home-woning.webp' dist/index.html
+          grep -Fq 'home-boot.webp' dist/index.html
+          grep -Fq 'id="bottomNav"' dist/index.html
+          grep -Fq 'index,follow' dist/index.html
+          grep -Fq 'Disallow: /' dist/robots.txt
+          test "$(git diff --name-only)" = 'site/index.html'
+      - name: Commit alleen de publieke Home naar stagingbranch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add site/index.html
+          git diff --cached --check
+          git config user.name 'Rumaz staging homepage importer'
+          git config user.email 'actions@users.noreply.github.com'
+          git commit -m 'Rumaz: goedgekeurde Home ook op publieke root (staging)'
+          git push origin HEAD:refs/heads/feat/rumaz-homepage-3-1
