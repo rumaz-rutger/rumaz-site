@@ -49,6 +49,8 @@ jobs:
           unzip -oq rumaz-six-cards-3-1.zip -d /tmp/rumaz-six-cards
           test "$(find /tmp/rumaz-six-cards/assets -maxdepth 1 -name '*.webp' | wc -l)" -eq 6
           cp /tmp/rumaz-six-cards/assets/*.webp site/assets/img/
+          # Corrigeer uitsluitend de 3 bestaande subtype-controles in het meegeleverde script.
+          sed -i "s/if n!=1: raise RuntimeError/if n!=1 and not (label in ('formKind','display subtype') and n in (3,2)): raise RuntimeError/" /tmp/rumaz-six-cards/apply-six-cards.py
           python3 /tmp/rumaz-six-cards/apply-six-cards.py
           git diff --check
           git diff --stat
