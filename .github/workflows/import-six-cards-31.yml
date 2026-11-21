@@ -1,0 +1,76 @@
+name: RuMaZ 3.1 - zes plekkaarten veilig importeren
+
+on:
+  push:
+    branches:
+      - feat/rumaz-homepage-3-1
+    paths:
+      - .github/workflows/import-six-cards-31.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: rumaz-six-cards-31-import
+  cancel-in-progress: false
+
+jobs:
+  import-six-cards:
+    if: github.repository == 'rumaz-rutger/rumaz-site' && github.ref == 'refs/heads/feat/rumaz-homepage-3-1'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      RUMAZ_ENV: staging
+      RUMAZ_SITE_ORIGIN: https://rumaz-staging.netlify.app
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verifieer alleen de beoogde featurebranch en pakket
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=3bd2ca204d6a9b644e068dc201824f4d1fe5ed7b
+          test "$GITHUB_REF" = 'refs/heads/feat/rumaz-homepage-3-1'
+          test "$(git branch --show-current)" = 'feat/rumaz-homepage-3-1'
+          git fetch origin main
+          test "$(git rev-parse FETCH_HEAD)" = '15a54a4ea31ebfcc057c787479dd0fd59640cb18'
+          git merge-base --is-ancestor "$base" HEAD
+          test -z "$(git status --porcelain)"
+          expected=$(printf '%s\n' '.github/workflows/import-six-cards-31.yml' 'rumaz-six-cards-3-1.zip' | sort)
+          test "$(git diff --name-only "$base" HEAD | sort)" = "$expected"
+          echo 'a51e22dcb318176b5fd92df7690e2359a7b4804d7de6e46e4f7d88ca3699d7d5  rumaz-six-cards-3-1.zip' | sha256sum -c -
+          unzip -tq rumaz-six-cards-3-1.zip
+      - name: Voeg zes beelden toe en wijzig alleen de homepageflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/rumaz-six-cards
+          unzip -oq rumaz-six-cards-3-1.zip -d /tmp/rumaz-six-cards
+          test "$(find /tmp/rumaz-six-cards/assets -maxdepth 1 -name '*.webp' | wc -l)" -eq 6
+          cp /tmp/rumaz-six-cards/assets/*.webp site/assets/img/
+          python3 /tmp/rumaz-six-cards/apply-six-cards.py
+          git diff --check
+          git diff --stat
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Test en bouw uitsluitend met stagingconfiguratie
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci
+          npm test
+          python3 qa/check-static.py
+          npm run build
+      - name: Commit geteste wijzigingen uitsluitend op featurebranch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rm rumaz-six-cards-3-1.zip
+          git add site/app/index.html site/assets/js/rumaz3-intent.js site/assets/js/rumaz3-social.js qa/homepage-intent.test.mjs qa/homepage-auth.test.mjs site/assets/img/home-woning.webp site/assets/img/home-appartement.webp site/assets/img/home-huisje.webp site/assets/img/home-camper.webp site/assets/img/home-caravan.webp site/assets/img/home-boot.webp
+          git diff --cached --check
+          git config user.name 'RuMaZ 3.1 staging importer'
+          git config user.email 'actions@users.noreply.github.com'
+          git commit -m 'RuMaZ 3.1: zes homepagekaarten, bestaande check-in behouden'
+          git push origin HEAD:refs/heads/feat/rumaz-homepage-3-1
