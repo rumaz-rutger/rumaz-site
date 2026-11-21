@@ -1,0 +1,68 @@
+name: RuMaZ 3.1 - veilige homepage-import
+
+on:
+  push:
+    branches:
+      - feat/rumaz-homepage-3-1
+    paths:
+      - .github/workflows/import-homepage-31.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: rumaz-homepage-31-import
+  cancel-in-progress: false
+
+jobs:
+  import-homepage:
+    if: github.repository == 'rumaz-rutger/rumaz-site' && github.ref == 'refs/heads/feat/rumaz-homepage-3-1'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      RUMAZ_ENV: staging
+      RUMAZ_SITE_ORIGIN: https://rumaz-staging.netlify.app
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verifieer basis en patch; pas uitsluitend toe op featurebranch
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=15a54a4ea31ebfcc057c787479dd0fd59640cb18
+          test "$GITHUB_REF" = 'refs/heads/feat/rumaz-homepage-3-1'
+          test "$(git branch --show-current)" = 'feat/rumaz-homepage-3-1'
+          git fetch origin main
+          test "$(git rev-parse FETCH_HEAD)" = "$base"
+          git merge-base --is-ancestor "$base" HEAD
+          test -z "$(git status --porcelain)"
+          expected=$(printf '%s\n' '.github/workflows/import-homepage-31.yml' 'homepage-3.1.patch' | sort)
+          test "$(git diff --name-only "$base" HEAD | sort)" = "$expected"
+          test "$(git hash-object homepage-3.1.patch)" = '0a0dbee81bba647176c4068122c969a2a273b8ed'
+          echo '443f7a30e3540dd1e6d8e82d1f639011cb21ebca8ceae062f9217ed6203a4674  homepage-3.1.patch' | sha256sum -c -
+          git apply --check --index homepage-3.1.patch
+          git apply --index homepage-3.1.patch
+          git diff --cached --check
+          git diff --cached --stat
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Test bestaande app en nieuwe homepage (stagingconfiguratie)
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci
+          npm test
+          python3 qa/check-static.py
+          npm run build
+      - name: Commit geteste patch uitsluitend op featurebranch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rm homepage-3.1.patch
+          git diff --cached --check
+          git config user.name 'RuMaZ homepage import'
+          git config user.email 'actions@users.noreply.github.com'
+          git commit -m 'RuMaZ 3.1: homepage en check-in (geteste Work-patch)'
+          git push origin HEAD:refs/heads/feat/rumaz-homepage-3-1
