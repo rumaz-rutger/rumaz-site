@@ -1,0 +1,58 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+
+> test
+> node --experimental-vm-modules --test qa/*.test.mjs
+
+(node:26) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ existing short password is submitted for login, not rejected by signup rules (9.869837ms)
+✔ ordinary session cannot reset password (2.829296ms)
+✔ recovery session updates password then signs out (2.646324ms)
+✔ welcome page validates user without a form submission (2.57055ms)
+✔ unconfirmed login never enters app (2.445694ms)
+✔ unconfirmed user never loads private tables (1.594476ms)
+✔ server booking refusal is propagated rather than reporting success (0.474907ms)
+✔ task update requires a returned authorized row (0.232697ms)
+✔ post authorship comes from authenticated identity (0.245566ms)
+(node:33) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ camper registration, same-origin callback in a new tab and login preserve choice (20.238598ms)
+✔ chalet registration, same-origin callback in a new tab and login preserve choice (6.75807ms)
+✔ appartement registration, same-origin callback in a new tab and login preserve choice (4.371584ms)
+✔ boot registration, same-origin callback in a new tab and login preserve choice (5.964422ms)
+✔ existing invitation destination has priority and foreign return is rejected (4.395805ms)
+(node:34) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ guest camper retains only type and does not create a place (253.480216ms)
+✔ member camper opens, saves once and reloads correct subtype (332.517225ms)
+✔ guest chalet retains only type and does not create a place (82.641175ms)
+✔ member chalet opens, saves once and reloads correct subtype (140.499086ms)
+✔ guest appartement retains only type and does not create a place (40.090239ms)
+✔ member appartement opens, saves once and reloads correct subtype (145.628773ms)
+✔ guest boot retains only type and does not create a place (31.920183ms)
+✔ member boot opens, saves once and reloads correct subtype (91.375103ms)
+✔ cancel, changed type and relationship never create on their own (96.422079ms)
+✔ invalid and expired storage cannot authorize or redirect (10.733944ms)
+✔ all screen sections stay inside main and card links use existing registration (26.56266ms)
+✔ refresh after cancelling empty Mijn plek does not reopen modal (106.631351ms)
+✔ browser back to guest home does not redirect a remembered intent again (80.251132ms)
+(node:35) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ mail templates substitute literal data, never executable markup (1.73772ms)
+✔ notification endpoint rejects missing bearer and foreign origin (2.457682ms)
+✔ test mail cannot send to a different recipient or multiple addresses (0.801955ms)
+✔ SMTP failure revokes invitation and never reports success (11.876077ms)
+✔ successful invitation returns no reusable token (2.809136ms)
+(node:36) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ RC5 authenticated DOM renders five nav tabs and month, switches places, saves requests (384.983501ms)
+✔ RC5 planner and invitation use backend and contain no fake member insertion (208.460206ms)
+✔ all independent RC5 sections render without missing dependencies (194.036543ms)
+ℹ tests 35
+ℹ suites 0
+ℹ pass 35
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2362.163746

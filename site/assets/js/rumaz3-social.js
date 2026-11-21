@@ -1,8 +1,11 @@
 
 (async()=>{
+ const intent=window.RumazIntent;
+ const requestedType=intent?.fromSearch(location.search);
  const live=window.RUMAZ_AUTH_CONFIG?.enabled===true;
  let remote=null,backend=null;
  if(live){try{backend=await import('./rumaz3-data.js');remote=new backend.RumazData();await remote.session();}catch{document.getElementById('demoToast').textContent='Verbinding niet beschikbaar. Probeer het later opnieuw.';document.getElementById('demoToast').style.display='block';return;}}
+ const pendingType=requestedType||(remote?.user?intent?.read():null);
  const incomingInvite=location.hash.match(/^#uitnodiging=([a-f0-9]{64})$/)?.[1];
  if(live&&incomingInvite){sessionStorage.setItem('rumaz_invitation',incomingInvite);history.replaceState(null,'',location.pathname);}
  const login=()=>{sessionStorage.setItem('rumaz_return_to','/app/'+location.hash);location.assign('/app/account/inloggen/');};
@@ -52,10 +55,11 @@
  document.querySelectorAll('[data-hub-page]').forEach(b=>b.addEventListener('click',()=>showHubDetail(b.dataset.hubPage)));
  document.getElementById('hubBack').addEventListener('click',()=>{showHubOverview();document.getElementById('mainContent').scrollIntoView({block:'start',behavior:'instant'});});
 
- g.addEventListener('click',async()=>{if(live){try{await remote.logout();location.reload();}catch{notify('Uitloggen is niet gelukt. Probeer opnieuw.');}return;}setUser('guest')});m.addEventListener('click',()=>setUser('member'));document.getElementById('visitorStart').addEventListener('click',()=>document.querySelector('.four-routes').scrollIntoView({block:'start',behavior:'smooth'}));document.getElementById('visitorMember').addEventListener('click',()=>openPlace(chosenPlace||'family','overzicht'));
+ g.addEventListener('click',async()=>{if(live){try{await remote.logout();location.reload();}catch{notify('Uitloggen is niet gelukt. Probeer opnieuw.');}return;}setUser('guest')});m.addEventListener('click',()=>setUser('member'));document.getElementById('visitorStart').addEventListener('click',e=>{e.preventDefault();document.getElementById('choicesTitle').focus();});
  const roleInput=document.getElementById('roleInput'),typeInput=document.getElementById('typeInput');
  const addRoles={own:'Mijn eigen plek',shared:'Een plek die ik deel',rent:'Een plek die ik huur'};
- const placeTypes={home:'Huis of chalet',camper:'Camper',caravan:'Caravan',static:'Stacaravan',boat:'Boot',other:'Andere plek'};
+ const placeTypes={home:'Huis',chalet:'Chalet',appartement:'Appartement',camper:'Camper',caravan:'Caravan',static:'Stacaravan',boat:'Boot',other:'Andere plek'};
+ const formKind=type=>['chalet','appartement'].includes(type)?'home':type;
  const typeFieldIds={
   home:['homeStreet','homeNumber','homePostcode','homeCity','homeCountry','homeUrl'],
   camper:['camperPlate','camperCountry','camperModel','camperUrl'],
@@ -68,15 +72,16 @@
   const role=roleInput.value,type=typeInput.value;
   document.getElementById('dialogTitle').textContent='Een plek toevoegen';
   document.getElementById('ownerExtras').hidden=role==='rent';
-  document.querySelectorAll('[data-fields]').forEach(el=>{el.hidden=el.dataset.fields!==type});
+  document.querySelectorAll('[data-fields]').forEach(el=>{el.hidden=el.dataset.fields!==formKind(type)});
   document.getElementById('typeSummary').textContent=placeTypes[type]+' · '+addRoles[role];
   document.getElementById('modalIntro').textContent=role==='rent'?'Ook zonder medewerking van de verhuurder kun je jullie verblijf, agenda en tips bij elkaar houden.':'Voeg deze plek toe voor jezelf en je mensen. Jullie vullen samen de praktische informatie en herinneringen aan.';
   document.getElementById('importPreview').hidden=true;
  }
- const open=()=>{modal.classList.add('open');document.getElementById('importPreview').hidden=true;updateInputs();typeInput.focus()};
- const close=()=>modal.classList.remove('open');
- const chooseRole=role=>{
-  roleInput.value=role;typeInput.value='home';
+ const open=()=>{modalTrigger=document.activeElement;document.body.classList.add('modal-open');modal.classList.add('open');document.getElementById('importPreview').hidden=true;updateInputs();typeInput.focus()};
+ let modalTrigger;
+ const close=()=>{modal.classList.remove('open');document.body.classList.remove('modal-open');if(modalTrigger?.isConnected)modalTrigger.focus();};
+ const chooseRole=(role,type='home')=>{
+  roleInput.value=role;typeInput.value=type;
   document.querySelectorAll('#addModal input, #addModal textarea').forEach(el=>{el.value=''});
   document.getElementById('circleInput').value=role==='rent'?'Reisgezelschap':'Familie en vrienden';open();
  };
@@ -87,11 +92,11 @@
  document.getElementById('closeModal').addEventListener('click',close);
  document.getElementById('cancelAdd').addEventListener('click',close);
  modal.addEventListener('click',e=>{if(e.target===modal)close()});
- document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+ document.addEventListener('keydown',e=>{if(!modal.classList.contains('open'))return;if(e.key==='Escape'){close();return;}if(e.key==='Tab'){const nodes=[...modal.querySelectorAll('button,input,select,textarea,a[href]')].filter(x=>!x.disabled&&!x.closest('[hidden]')&&x.getClientRects().length);const first=nodes[0],last=nodes.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}});
  document.getElementById('simulateAdd').addEventListener('click',()=>{
   const type=typeInput.value,role=roleInput.value,name=document.getElementById('ownName').value.trim();
-  const values=typeFieldIds[type].map(id=>{const el=document.getElementById(id);return {id,label:el.labels?.[0]?.textContent?.trim()||id,value:el.value.trim()}}).filter(x=>x.value);
-  if(!values.length&&!name){notify('Geef een adres, kenteken, camping, ligplaats of naam op zodat je de plek herkent.');document.getElementById(typeFieldIds[type][0]).focus();return;}
+  const values=typeFieldIds[formKind(type)].map(id=>{const el=document.getElementById(id);return {id,label:el.labels?.[0]?.textContent?.trim()||id,value:el.value.trim()}}).filter(x=>x.value);
+  if(!values.length&&!name){notify('Geef een adres, kenteken, camping, ligplaats of naam op zodat je de plek herkent.');document.getElementById(typeFieldIds[formKind(type)][0]).focus();return;}
   const invalidUrl=values.find(x=>x.id.toLowerCase().endsWith('url')&&!/^https?:\/\/[^\s.]+\.[^\s]+/i.test(x.value));
   if(invalidUrl){notify('Gebruik een volledige link, zoals https://voorbeeld.nl, of laat hem leeg.');document.getElementById(invalidUrl.id).focus();return;}
   const origin=name?name:values.map(x=>x.value).slice(0,2).join(' · ');
@@ -124,7 +129,7 @@
  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  let chosenPlace=live?(data.places[0]?.id||''):'family',chosenPart='overzicht',pending=null,calendarMonth=live?new Date(new Date().getFullYear(),new Date().getMonth(),1):new Date(2027,0,1),calendarAs='member',draftStart='',draftEnd='',emailPreview=null;
  const placeById=id=>data.places.find(p=>p.id===id) || data.places[0];
- const niceType=t=>({home:'Huis of chalet',camper:'Camper',caravan:'Caravan',static:'Stacaravan',boat:'Boot',other:'Andere plek'}[t]||'Plek');
+ const niceType=t=>({home:'Huis',chalet:'Chalet',appartement:'Appartement',camper:'Camper',caravan:'Caravan',static:'Stacaravan',boat:'Boot',other:'Andere plek'}[t]||'Plek');
  const safeUrl=u=>{try{let v=new URL(String(u));return ['https:','http:'].includes(v.protocol)?v.href:''}catch{return ''}};
  function autoLocation(fields){const byId=id=>fields.find(x=>x.id===id)?.value||'';return [byId('homeCity'),byId('homeCountry')].filter(Boolean).join(', ') ||[byId('staticCamp'),byId('staticCity'),byId('staticCountry')].filter(Boolean).join(', ')||[byId('camperModel'),byId('caravanWhere'),byId('boatCity'),byId('otherWhere')].filter(Boolean).join(', ')||'Locatie nog invullen';}
  function introMembers(kring){return [{name:'Jij',role:'Beheerder'}]}
@@ -144,7 +149,7 @@
   const target=document.getElementById('placesDemoList'); if(!target)return;
   target.innerHTML=data.places.map(p=>`<button data-open-place="${esc(p.id)}" type="button"><span style="font-size:22px">${p.type==='camper'?'🚐':p.type==='boat'?'⛵':p.type==='static'?'🌲':'⌂'}</span><strong>${esc(p.name)}</strong><small style="color:var(--muted)">${esc(p.location||p.circle)}</small><span aria-hidden="true">›</span></button>`).join('');
  }
- function openPlace(id,part='overzicht'){if(live&&!remote.user){login();return;}if(live&&!data.places.length){notify('Voeg eerst jouw plek toe.');chooseRole('own');return;}
+ function openPlace(id,part='overzicht'){if(live&&!remote.user){login();return;}if(live&&!data.places.length){selectTab('plek');return;}
   chosenPlace=placeById(id)?.id||'family';chosenPart=part;
   calendarMonth=chosenPlace==='family'?new Date(2027,0,1):new Date(new Date().getFullYear(),new Date().getMonth(),1);
   if(user!=='member'){user='member';document.body.classList.remove('guest');g.classList.remove('active');m.classList.add('active');g.setAttribute('aria-pressed','false');m.setAttribute('aria-pressed','true');}
@@ -157,10 +162,12 @@
  if(!live&&!data.schemaV4){const sample=seedPlaces.find(p=>p.id==='family');for(const p of data.places){if(p.id==='family' && !Array.isArray(p.bookings))p.bookings=JSON.parse(JSON.stringify(sample.bookings));if(typeof p.showActivities!=='boolean')p.showActivities=false;if(typeof p.requireApproval!=='boolean')p.requireApproval=true;}data.schemaV4=true;try{localStorage.setItem(STORE,JSON.stringify(data))}catch{}}
 
  function renderPlace(){
-  const p=placeById(chosenPlace);if(!p)return;
+  const p=placeById(chosenPlace);
+  document.getElementById('placeParts').hidden=!p;
+  if(!p){document.getElementById('detailName').textContent='Jouw eerste plek';document.getElementById('detailMeta').textContent='Voeg een plek toe voor jou en je mensen.';document.getElementById('detailMain').innerHTML='<button class="btn" id="firstPlaceAdd" type="button">Plek toevoegen</button>';document.getElementById('firstPlaceAdd').addEventListener('click',()=>chooseRole('own'));return;}
   if(live)calendarAs=p.accessRole==='admin'?'admin':'member';
   document.getElementById('detailName').textContent=p.name;
-  document.getElementById('detailMeta').textContent=[niceType(p.type),p.location,p.circle].filter(Boolean).join(' · ');
+  document.getElementById('detailMeta').textContent=[(p.type==='home'&&['chalet','appartement'].includes(p.fields?.find(f=>f.id==='placeSubtype')?.value)?placeTypes[p.fields.find(f=>f.id==='placeSubtype').value]:niceType(p.type)),p.location,p.circle].filter(Boolean).join(' · ');
   const picker=document.getElementById('placeSwitcher');
   picker.innerHTML=data.places.map(x=>`<option value="${esc(x.id)}" ${x.id===p.id?'selected':''}>${esc(x.name)}</option>`).join('');
   document.querySelectorAll('[data-switch-part]').forEach(b=>{const on=b.dataset.switchPart===chosenPart;b.classList.toggle('active',on);if(b.getAttribute('role')==='tab')b.setAttribute('aria-selected',String(on))});
@@ -231,10 +238,11 @@
  document.getElementById('saveDemoPlace').addEventListener('click',()=>{
   if(document.getElementById('importPreview').hidden){notify('Bekijk eerst de voorbeeldplek.');return}
   const type=typeInput.value,role=roleInput.value;
-  const fields=typeFieldIds[type].map(id=>{const el=document.getElementById(id);return{id,value:el.value.trim()}}).filter(x=>x.value);
+  const fields=typeFieldIds[formKind(type)].map(id=>{const el=document.getElementById(id);return{id,value:el.value.trim()}}).filter(x=>x.value);
   const name=document.getElementById('ownName').value.trim()||fields.slice(0,2).map(x=>x.value).join(' · ')||'Onze plek';
+  if(['chalet','appartement'].includes(type))fields.push({id:'placeSubtype',value:type});
   const guide=document.getElementById('ownGuide').value.trim();const note=document.getElementById('ownNotes').value.trim();
-  pending={id:'plek-'+Date.now(),type,role,name,location:autoLocation(fields),circle:document.getElementById('circleInput').value,fields,members:introMembers(),bookings:[],showActivities:false,requireApproval:true,posts:note?[{id:'p-'+Date.now(),author:'Jij',date:'Zojuist',text:note,likes:0,replies:[],mentions:[]}]:[],events:[],guides:guide?[{title:'Eerste instructie',text:guide}]:[],tips:[]};
+  pending={id:'plek-'+Date.now(),type:formKind(type),role,name,location:autoLocation(fields),circle:document.getElementById('circleInput').value,fields,members:introMembers(),bookings:[],showActivities:false,requireApproval:true,posts:note?[{id:'p-'+Date.now(),author:'Jij',date:'Zojuist',text:note,likes:0,replies:[],mentions:[]}]:[],events:[],guides:guide?[{title:'Eerste instructie',text:guide}]:[],tips:[]};
   if(live){
    const draft=backend.saveDraft(pending);close();
    if(!remote.user){location.assign('/app/account/registreren/');return;}
@@ -365,7 +373,7 @@
  document.querySelectorAll('[data-nav]').forEach(x=>x.addEventListener('click',()=>{if(x.dataset.nav==='plekken')renderPlaces();if(x.dataset.nav==='home'||x.dataset.nav==='berichten')renderMemberHome()}));
 
  // Deep-linking from public pages and account pages returns to the correct social tab.
- function openEntryHash(){const entry=decodeURIComponent(location.hash.replace(/^#/,''));const requested=new URLSearchParams(location.search).get('place');if(requested&&data.places.some(p=>p.id===requested))chosenPlace=requested;
+ function openEntryHash(){let entry;try{entry=decodeURIComponent(location.hash.replace(/^#/,''));}catch{return;}const requested=new URLSearchParams(location.search).get('place');if(requested&&data.places.some(p=>p.id===requested))chosenPlace=requested;
   if(entry==='plek-planner'){openPlace(chosenPlace||'family','planner');return}
   if(entry==='plek-prikbord'){openPlace(chosenPlace||'family','prikbord');return}
   if(entry==='plek-agenda'){openPlace(chosenPlace||'family','agenda');return}
@@ -382,16 +390,25 @@
   const invitation=sessionStorage.getItem('rumaz_invitation');
   if(invitation)await runRemote(async()=>{const id=await remote.accept(invitation);sessionStorage.removeItem('rumaz_invitation');await refresh();openPlace(id);},'Je doet mee met deze plek.');
   const draft=backend.readDraft();
-  if(draft)await runRemote(async()=>{const id=await remote.createPlace(draft);backend.clearDraft();await refresh();openPlace(id);},'Je plek is opgeslagen.');
+  if(draft&&!pendingType)await runRemote(async()=>{const id=await remote.createPlace(draft);backend.clearDraft();await refresh();openPlace(id);},'Je plek is opgeslagen.');
  }
- openEntryHash();
+ if(!pendingType)openEntryHash();
  // Read-only visitor intent: controls only which add-place form opens, never permissions.
  const startIntent = new URLSearchParams(location.search).get('start');
- if(['own','shared','rent'].includes(startIntent)){
+ if(!pendingType&&['own','shared','rent'].includes(startIntent)){
   chooseRole(startIntent);
   // Prevent a back/refresh loop while keeping a working, shareable initial deep link.
   try {history.replaceState(history.state,'',location.pathname+location.hash)}catch{}
  }
+ function startPlace(code){
+  if(!intent?.valid(code))return;
+  if(live&&!remote.user){intent.remember(code);history.replaceState(history.state,'','/app/#home');location.assign(intent.route('/app/account/registreren/',code));return;}
+  selectTab('plek');chooseRole('own',code==='boot'?'boat':code);intent.clear();
+  history.replaceState(history.state,'','/app/#plek');
+ }
+ document.querySelectorAll('[data-place-intent]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();startPlace(a.dataset.placeIntent)}));
+ if(pendingType)startPlace(pendingType);
+ if(location.hash==='#kies-plek'){selectTab('home');document.getElementById('choicesTitle').focus();}
  document.getElementById('infoBtn').addEventListener('click',()=>notify(live?'Je plekken zijn alleen zichtbaar voor deelnemers met toegang.':'Dit is een lokale demonstratie.'));
- if(live){document.getElementById('resetDemo').hidden=true;g.textContent=remote.user?'Uitloggen':'Bezoeker';}
+ if(live){document.getElementById('resetDemo').hidden=true;g.textContent=remote.user?'Uitloggen':'Bezoeker';g.hidden=!remote.user;}
 })();
