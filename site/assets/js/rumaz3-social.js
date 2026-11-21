@@ -58,8 +58,8 @@
  g.addEventListener('click',async()=>{if(live){try{await remote.logout();location.reload();}catch{notify('Uitloggen is niet gelukt. Probeer opnieuw.');}return;}setUser('guest')});m.addEventListener('click',()=>setUser('member'));document.getElementById('visitorStart').addEventListener('click',e=>{e.preventDefault();document.getElementById('choicesTitle').focus();});
  const roleInput=document.getElementById('roleInput'),typeInput=document.getElementById('typeInput');
  const addRoles={own:'Mijn eigen plek',shared:'Een plek die ik deel',rent:'Een plek die ik huur'};
- const placeTypes={home:'Huis',chalet:'Chalet',appartement:'Appartement',camper:'Camper',caravan:'Caravan',static:'Stacaravan',boat:'Boot',other:'Andere plek'};
- const formKind=type=>['chalet','appartement'].includes(type)?'home':type;
+ const placeTypes={home:'Woning',chalet:'Chalet',huisje:'Huisje',appartement:'Appartement',camper:'Camper',caravan:'Caravan',static:'Stacaravan',boat:'Boot',other:'Andere plek'};
+ const formKind=type=>['chalet','huisje','appartement'].includes(type)?'home':type;
  const typeFieldIds={
   home:['homeStreet','homeNumber','homePostcode','homeCity','homeCountry','homeUrl'],
   camper:['camperPlate','camperCountry','camperModel','camperUrl'],
@@ -129,7 +129,7 @@
  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  let chosenPlace=live?(data.places[0]?.id||''):'family',chosenPart='overzicht',pending=null,calendarMonth=live?new Date(new Date().getFullYear(),new Date().getMonth(),1):new Date(2027,0,1),calendarAs='member',draftStart='',draftEnd='',emailPreview=null;
  const placeById=id=>data.places.find(p=>p.id===id) || data.places[0];
- const niceType=t=>({home:'Huis',chalet:'Chalet',appartement:'Appartement',camper:'Camper',caravan:'Caravan',static:'Stacaravan',boat:'Boot',other:'Andere plek'}[t]||'Plek');
+ const niceType=t=>({home:'Woning',chalet:'Chalet',huisje:'Huisje',appartement:'Appartement',camper:'Camper',caravan:'Caravan',static:'Stacaravan',boat:'Boot',other:'Andere plek'}[t]||'Plek');
  const safeUrl=u=>{try{let v=new URL(String(u));return ['https:','http:'].includes(v.protocol)?v.href:''}catch{return ''}};
  function autoLocation(fields){const byId=id=>fields.find(x=>x.id===id)?.value||'';return [byId('homeCity'),byId('homeCountry')].filter(Boolean).join(', ') ||[byId('staticCamp'),byId('staticCity'),byId('staticCountry')].filter(Boolean).join(', ')||[byId('camperModel'),byId('caravanWhere'),byId('boatCity'),byId('otherWhere')].filter(Boolean).join(', ')||'Locatie nog invullen';}
  function introMembers(kring){return [{name:'Jij',role:'Beheerder'}]}
@@ -167,7 +167,7 @@
   if(!p){document.getElementById('detailName').textContent='Jouw eerste plek';document.getElementById('detailMeta').textContent='Voeg een plek toe voor jou en je mensen.';document.getElementById('detailMain').innerHTML='<button class="btn" id="firstPlaceAdd" type="button">Plek toevoegen</button>';document.getElementById('firstPlaceAdd').addEventListener('click',()=>chooseRole('own'));return;}
   if(live)calendarAs=p.accessRole==='admin'?'admin':'member';
   document.getElementById('detailName').textContent=p.name;
-  document.getElementById('detailMeta').textContent=[(p.type==='home'&&['chalet','appartement'].includes(p.fields?.find(f=>f.id==='placeSubtype')?.value)?placeTypes[p.fields.find(f=>f.id==='placeSubtype').value]:niceType(p.type)),p.location,p.circle].filter(Boolean).join(' · ');
+  document.getElementById('detailMeta').textContent=[(p.type==='home'&&['chalet','huisje','appartement'].includes(p.fields?.find(f=>f.id==='placeSubtype')?.value)?placeTypes[p.fields.find(f=>f.id==='placeSubtype').value]:niceType(p.type)),p.location,p.circle].filter(Boolean).join(' · ');
   const picker=document.getElementById('placeSwitcher');
   picker.innerHTML=data.places.map(x=>`<option value="${esc(x.id)}" ${x.id===p.id?'selected':''}>${esc(x.name)}</option>`).join('');
   document.querySelectorAll('[data-switch-part]').forEach(b=>{const on=b.dataset.switchPart===chosenPart;b.classList.toggle('active',on);if(b.getAttribute('role')==='tab')b.setAttribute('aria-selected',String(on))});
@@ -240,7 +240,7 @@
   const type=typeInput.value,role=roleInput.value;
   const fields=typeFieldIds[formKind(type)].map(id=>{const el=document.getElementById(id);return{id,value:el.value.trim()}}).filter(x=>x.value);
   const name=document.getElementById('ownName').value.trim()||fields.slice(0,2).map(x=>x.value).join(' · ')||'Onze plek';
-  if(['chalet','appartement'].includes(type))fields.push({id:'placeSubtype',value:type});
+  if(['chalet','huisje','appartement'].includes(type))fields.push({id:'placeSubtype',value:type});
   const guide=document.getElementById('ownGuide').value.trim();const note=document.getElementById('ownNotes').value.trim();
   pending={id:'plek-'+Date.now(),type:formKind(type),role,name,location:autoLocation(fields),circle:document.getElementById('circleInput').value,fields,members:introMembers(),bookings:[],showActivities:false,requireApproval:true,posts:note?[{id:'p-'+Date.now(),author:'Jij',date:'Zojuist',text:note,likes:0,replies:[],mentions:[]}]:[],events:[],guides:guide?[{title:'Eerste instructie',text:guide}]:[],tips:[]};
   if(live){
@@ -403,7 +403,7 @@
  function startPlace(code){
   if(!intent?.valid(code))return;
   if(live&&!remote.user){intent.remember(code);history.replaceState(history.state,'','/app/#home');location.assign(intent.route('/app/account/registreren/',code));return;}
-  selectTab('plek');chooseRole('own',code==='boot'?'boat':code);intent.clear();
+  selectTab('plek');chooseRole('own',code==='woning'?'home':code==='boot'?'boat':code);intent.clear();
   history.replaceState(history.state,'','/app/#plek');
  }
  document.querySelectorAll('[data-place-intent]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();startPlace(a.dataset.placeIntent)}));

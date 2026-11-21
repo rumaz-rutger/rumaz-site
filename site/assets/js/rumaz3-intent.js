@@ -1,7 +1,7 @@
 /* Only a non-sensitive category is retained. Never an identity or authorization grant. */
 (()=>{
  const key='rumaz_place_intent_v1',ttl=86400000;
- const choices=Object.freeze({camper:{kind:'camper',label:'Camper'},chalet:{kind:'home',label:'Chalet'},appartement:{kind:'home',label:'Appartement'},boot:{kind:'boat',label:'Boot'}});
+ const choices=Object.freeze({woning:{kind:'home',label:'Woning'},appartement:{kind:'home',label:'Appartement'},huisje:{kind:'home',label:'Huisje'},camper:{kind:'camper',label:'Camper'},caravan:{kind:'caravan',label:'Caravan'},boot:{kind:'boat',label:'Boot'},chalet:{kind:'home',label:'Chalet'}});
  const valid=code=>typeof code==='string'&&Object.hasOwn(choices,code);
  const clear=()=>{try{localStorage.removeItem(key)}catch{}};
  function remember(code){if(!valid(code))return null;const value={code,savedAt:Date.now()};try{localStorage.setItem(key,JSON.stringify(value))}catch{}return code;}

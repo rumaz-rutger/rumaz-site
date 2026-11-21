@@ -11,7 +11,7 @@ async function harness({code,path,store=new Map(),confirmed=false,action='login'
  const dep=new vm.SyntheticModule(['getClient','safeReturn','verifiedUser'],function(){this.setExport('getClient',()=>api);this.setExport('safeReturn',v=>v?.startsWith('/app/#')?v:'/app/');this.setExport('verifiedUser',async()=>user)},{context:ctx});
  const m=new vm.SourceTextModule(authSource,{context:ctx});await m.link(()=>dep);await m.evaluate();await new Promise(setImmediate);return {calls,links,notice,submit:()=>submit({preventDefault(){}}),store};
 }
-for(const code of ['camper','chalet','appartement','boot'])test(code+' registration, same-origin callback in a new tab and login preserve choice',async()=>{
+for(const code of ['woning','appartement','huisje','camper','caravan','boot','chalet'])test(code+' registration, same-origin callback in a new tab and login preserve choice',async()=>{
  const register=await harness({code,path:'/app/account/registreren/',action:'register'});assert.match(register.notice.textContent,/toevoegen/);assert.ok(register.links.every(a=>a.href.includes('pleksoort='+code)));await register.submit();assert.deepEqual(register.calls,['https://rumaz-staging.netlify.app/app/account/welkom/','/app/account/controleer-je-mail/?pleksoort='+code]);
  const welcome=await harness({path:'/app/account/welkom/',store:register.store,confirmed:true});assert.deepEqual(welcome.calls,['/app/?pleksoort='+code+'#plek']);
  const login=await harness({code,path:'/app/account/inloggen/'});await login.submit();assert.deepEqual(login.calls,['/app/?pleksoort='+code+'#plek']);
