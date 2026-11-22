@@ -9,9 +9,12 @@ if(placeType){
  if(notice)notice.textContent='Je gaat een '+intent.choices[placeType].label+' toevoegen. Na aanmelden vul je de gegevens in.';
  for(const a of document.querySelectorAll('a[href]'))if(['/app/account/registreren/','/app/account/inloggen/'].includes(a.getAttribute('href')))a.href=intent.route(a.getAttribute('href'),placeType);
 }
+const startDraft=window.RumazStartDraft?.read();
+const displayName=document.querySelector('[name=displayName]');
+if(startDraft&&displayName)displayName.value=startDraft.firstName||'';
 const nextRoute=()=>{
  const saved=sessionStorage.getItem('rumaz_return_to');
- return saved?safeReturn(saved):placeType?intent.app(placeType):'/app/';
+ return saved?safeReturn(saved):startDraft?.ready?'/start-plek/':placeType?intent.app(placeType):'/app/';
 };
 const base=location.origin;
 const recoveryPage=location.pathname==='/app/account/wachtwoord-instellen/';
@@ -33,12 +36,12 @@ const ready=(async()=>{
   }
   // Remove callback parameters only after the SDK has processed the PKCE code.
   if(params.has('code'))history.replaceState(null,'',location.pathname);
-  if(placeType&&['/app/account/registreren/','/app/account/inloggen/'].includes(location.pathname)&&await verifiedUser()){
+  if((placeType||startDraft?.ready)&&['/app/account/registreren/','/app/account/inloggen/'].includes(location.pathname)&&await verifiedUser()){
     location.assign(nextRoute());return false;
   }
   if(welcomePage){
     const user=await verifiedUser();
-    if(user&&placeType){location.assign(nextRoute());return true;}
+    if(user&&(placeType||startDraft?.ready)){location.assign(nextRoute());return true;}
     if(!placeType){const notice=document.querySelector('#placeIntentMessage');if(notice&&notice.insertAdjacentHTML)notice.insertAdjacentHTML('beforeend','Geen pleksoort meer geselecteerd? <a href="/app/#kies-plek">Kies je plek opnieuw</a>.');}
     tell(user?'Je e-mailadres is bevestigd. Je kunt verder naar je plekken.':'Je bevestiging is niet voltooid. Open de link op hetzelfde apparaat en in dezelfde browser als je aanmelding, of log opnieuw in.');
   }
