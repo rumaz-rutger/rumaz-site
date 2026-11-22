@@ -1,6 +1,6 @@
 (()=>{
  const key='rumaz_start_v1',ttl=7*86400000,types=['woning','appartement','huisje','camper','caravan','boot'];
- const fields=['postcode','houseNumber','addition','reference','country','url','name','firstName','relationship','rooms','beds','capacity','bathrooms','kitchens'];
+ const fields=['brand','model','postcode','houseNumber','addition','reference','country','url','name','firstName','relationship','rooms','beds','capacity','bathrooms','kitchens'];
  function clean(d){
   if(!d||!types.includes(d.type)||!Number.isFinite(d.createdAt)||Date.now()<d.createdAt||Date.now()-d.createdAt>=ttl||!/^[0-9a-f-]{36}$/i.test(d.id))return null;
   const out={version:1,id:d.id,type:d.type,createdAt:d.createdAt,step:[1,2,3].includes(d.step)?d.step:1,ready:d.ready===true,manualVehicle:d.manualVehicle===true};

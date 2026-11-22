@@ -4,7 +4,7 @@ const stage=document.querySelector('#stage'),progress=document.querySelector('#p
 let draft=store.read(),busy=false,lookupResult=null,looking=false,revision=0;
 const lookupCopy='Je zoekgegevens worden alleen na jouw klik naar de gekozen openbare bron gestuurd. Controleer gevonden gegevens voordat je ze overneemt.';
 const esc=v=>String(v||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const say=t=>status.textContent=t;
+const say=t=>{status.textContent=t;const inline=document.querySelector('#search-message');if(inline)inline.textContent=t;};
 const save=()=>{if(!store.write(draft))say('Bewaren in deze browser lukt niet. Houd deze pagina open; gegevens kunnen bij aanmelden verloren gaan.');};
 const field=(key,label,type='text',optional=false)=>`<label>${label}<input name="${key}" type="${type}" value="${esc(draft[key])}" ${optional?'':'required'} ${type==='number'?'min="0" max="100" step="1"':'maxlength="200"'}></label>`;
 const button=(action,text)=>`<button class="btn" type="button" data-action="${action}">${text}</button>`;
@@ -13,7 +13,7 @@ function render(focus=true){
  if(step===1){stage.innerHTML='<div class="start-intro"><h1 tabindex="-1">Wat voor plek wil jij samen regelen?</h1><p>Kies het type accommodatie. Daarna helpen we je stap voor stap verder.</p></div><div class="start-grid">'+['woning','appartement','huisje','camper','caravan','boot'].map(t=>`<button class="start-card" data-type="${t}" aria-pressed="${draft?.type===t}"><img src="/assets/img/home-${t}.webp" alt=""><span>${choices[t].label}</span></button>`).join('')+'</div><p>Tik op jouw plek om te beginnen.</p>';}
  else if(step===2){
   const label={woning:'Postcode, huisnummer en toevoeging',appartement:'Postcode, huisnummer en toevoeging',huisje:'Adres of parknaam en pleknummer',camper:'Kenteken of merk en model',caravan:'Kenteken of merk en model',boot:'Naam, merk en type of ligplaats'}[draft.type];
-  stage.innerHTML=`<div class="start-intro"><h1 tabindex="-1">Waar vinden we jouw ${choices[draft.type].label.toLowerCase()}?</h1><p>Geef één aanknopingspunt.</p></div><form class="start-form">${field('country','Land')}${['camper','caravan'].includes(draft.type)?button('no-plate',draft.manualVehicle?'Toch zoeken op kenteken':'Geen Nederlands kenteken'):''}${['woning','appartement'].includes(draft.type)?field('postcode','Postcode','text',true)+field('houseNumber','Huisnummer','text',true)+field('addition','Toevoeging','text',true):''}${field('reference',['woning','appartement'].includes(draft.type)?'Adres (handmatig, bijvoorbeeld in het buitenland)':label,'text',['woning','appartement'].includes(draft.type))}<details><summary>Een website toevoegen (optioneel)</summary>${field('url','Website','url',true)}<small>Website-import werkt alleen voor goedgekeurde openbare bronnen. Andere websites kun je handmatig toevoegen.</small></details><div class="start-actions">${['woning','appartement','huisje','camper','caravan'].includes(draft.type)&&!draft.manualVehicle?button('lookup','Zoek openbare gegevens'):''}${button('website','Lees websitegegevens')}</div><small>${lookupCopy}</small><div id="lookup-result" role="status"></div><p>Geen resultaat? Vul zelf aan en ga verder. Buitenlandse adressen en boten kun je altijd handmatig invoeren.</p><div class="start-actions">${button('back','Terug')}<button class="btn" type="submit">Verder</button></div></form>`;
+  stage.innerHTML=`<div class="start-intro"><h1 tabindex="-1">Waar vinden we jouw ${choices[draft.type].label.toLowerCase()}?</h1><p>Geef één aanknopingspunt.</p></div><form class="start-form">${field('country','Land')}${['camper','caravan'].includes(draft.type)?button('no-plate',draft.manualVehicle?'Toch zoeken op kenteken':'Geen Nederlands kenteken'):''}${['woning','appartement'].includes(draft.type)?field('postcode','Postcode','text',true)+field('houseNumber','Huisnummer','text',true)+field('addition','Toevoeging','text',true):''}${field('reference',['woning','appartement'].includes(draft.type)?'Adres (handmatig, bijvoorbeeld in het buitenland)':label,'text',true)}<details><summary>Een website toevoegen (optioneel)</summary>${field('url','Website','url',true)}<small>Website-import werkt alleen voor goedgekeurde openbare bronnen. Andere websites kun je handmatig toevoegen.</small></details><div class="start-actions">${button('lookup','Zoek mijn plek')}</div><p id="search-message" role="status" aria-live="polite" tabindex="-1"></p><small>We zoeken met de gegevens die je hebt ingevuld. Je controleert zelf wat we vinden.</small><div id="lookup-result"></div><div id="manual-fields" ${draft.manualVehicle?'':'hidden'}>${['camper','caravan'].includes(draft.type)?field('brand','Merk','text',true)+field('model','Model','text',true):''}</div><div class="start-actions">${button('back','Terug')}<button class="btn" id="manual-next" type="submit" hidden>Ga verder</button></div></form>`;
  }else{
  stage.innerHTML=`<div class="start-intro"><h1 tabindex="-1">Zo wordt het jullie plek.</h1><p>Controleer en vul aan wat jij weet.</p></div><p class="start-preview">${esc(choices[draft.type].label)} · ${esc(draft.reference)} · ${esc(draft.country)}</p><form class="start-form">${field('name','Hoe heet jullie plek?')}<label>Wat is jouw band met deze plek?<select name="relationship" required><option value="">Kies jouw band</option>${[['own','Eigenaar'],['manager','Ik beheer de plek'],['shared','We delen of gebruiken de plek'],['rent','Ik huur of bezoek de plek']].map(([v,l])=>`<option value="${v}" ${draft.relationship===v?'selected':''}>${l}</option>`).join('')}</select></label><small>Je maakt een eigen besloten plek. Dit geeft geen toegang tot een bestaande kring en bewijst geen eigendom.</small>${field('rooms',draft.type==='boot'?'Hoeveel hutten zijn er?':'Hoeveel slaapkamers zijn er?','number')}${field('beds','Hoeveel bedden zijn er?','number')}${field('capacity','Hoeveel mensen kunnen er slapen?','number')}<details><summary>Badkamers en keukens (optioneel)</summary>${field('bathrooms','Aantal badkamers','number',true)}${field('kitchens','Aantal keukens','number',true)}</details>${field('firstName','Hoe mogen we je noemen?')}<p id="personal"></p><small>Je concept blijft maximaal zeven dagen op dit apparaat bewaard. Gebruik op een gedeeld apparaat de wisfunctie.</small><div class="start-actions">${button('back','Terug')}<button class="btn" type="submit">Bewaar jouw plek</button></div></form>`;
  }
@@ -36,26 +36,35 @@ async function persist(){
  }catch{say('Bewaren is nog niet gelukt. Je concept blijft beschikbaar. Probeer later opnieuw.');}
  finally{busy=false;stage.querySelectorAll('input,select,button').forEach(el=>el.disabled=false);}
 }
-async function findData(website){
- if(looking)return;collect();
- const query=website?draft.url:['woning','appartement'].includes(draft.type)&&draft.postcode&&draft.houseNumber?[draft.postcode,draft.houseNumber,draft.addition].filter(Boolean).join(' '):draft.reference;
- if(!query){say(website?'Vul eerst een website in.':'Vul eerst een postcode en huisnummer of kenteken in.');return;}
- if(!website&&!['nederland','nl'].includes(String(draft.country).trim().toLowerCase())){say('Automatisch zoeken is alleen voor Nederlandse adressen en kentekens. Vul je gegevens handmatig in.');return;}
- looking=true;const savedId=draft.id,reference=draft.reference,requestRevision=revision;lookupResult=null;say('Openbare gegevens worden gezocht…');
- try{
- const response=await fetch('/.netlify/functions/place-lookup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({kind:website?'website':['camper','caravan'].includes(draft.type)?'rdw':'address',query}),signal:AbortSignal.timeout(20000)});
- const result=await response.json();if(revision!==requestRevision||!draft||draft.id!==savedId||draft.reference!==reference||(website&&draft.url!==query)||draft.step!==2)return;
- if(!response.ok){const errors={REDIRECT:'Deze website verwijst naar een ander adres. Gebruik de uiteindelijke HTTPS-link of vul zelf in.',CONTENT_TYPE:'Deze bron levert geen leesbare webpagina. Vul zelf in.',SIZE:'Deze pagina is te groot om veilig te importeren. Vul zelf in.',TIMEOUT:'De bron reageert niet op tijd. Probeer later of vul zelf in.',URL:'Gebruik een openbare HTTPS-link zonder inloggegevens. Je kunt ook zelf invullen.',RDW_UNAVAILABLE:'RDW is nu niet bereikbaar. Kies Geen Nederlands kenteken om merk en model handmatig in te vullen.',HOST_NOT_APPROVED:'Voor dit domein is nog geen importtoestemming ingesteld. Vul de gegevens handmatig in.',ROBOTS:'Deze website staat automatisch uitlezen niet toe. Je kunt zelf verder.',INPUT:'Controleer postcode en huisnummer of het Nederlandse kenteken.'};say(errors[result.error]||'De bron is nu niet bereikbaar. Je kunt zelf verder.');return;}
- if(!result.found){say(website?'Deze pagina bevat geen bruikbare openbare accommodatiegegevens. Vul de gegevens zelf in.':['camper','caravan'].includes(draft.type)?'Dit kenteken is niet gevonden. Controleer het of kies Geen Nederlands kenteken om merk en model in te vullen.':'Geen exact adres gevonden. Controleer de invoer of vul het adres zelf in.');return;}
- lookupResult=result;const box=document.querySelector('#lookup-result');if(result.candidates?.length>1){box.innerHTML='<p>Kies jouw adres of accommodatie:</p>'+result.candidates.map((v,i)=>'<button type="button" class="btn" data-candidate="'+i+'">'+esc(v.name||v.reference)+'</button>').join('');say('Er zijn meerdere resultaten. Maak zelf een keuze.');return;}showSource();
- }catch{if(revision===requestRevision)say('Zoeken is niet gelukt. Je kunt gewoon zelf verder.');}finally{looking=false;}
-}
 const labels={name:'Naam',reference:'Adres of kenteken',country:'Land',rooms:'Slaapkamers of hutten',beds:'Bedden',bathrooms:'Badkamers',capacity:'Slaapplaatsen'};
+let pendingResults=[];
+function manual(message){say(message);document.querySelector('#manual-next').hidden=false;document.querySelector('#manual-fields').hidden=false;document.querySelector('#search-message').focus();}
+async function findData(){
+ if(looking)return;collect();const jobs=[],vehicle=['camper','caravan'].includes(draft.type),nl=['nl','nederland'].includes((draft.country||'').toLowerCase());
+ const query=draft.postcode&&draft.houseNumber?[draft.postcode,draft.houseNumber,draft.addition].filter(Boolean).join(' '):draft.reference;
+ if(nl&&query&&draft.type!=='boot'&&!draft.manualVehicle)jobs.push({kind:vehicle?'rdw':'address',query});
+ if(draft.url)jobs.push({kind:'website',query:draft.url});
+ if(!jobs.length){manual('Vul je adres, kenteken of een website in. Je kunt de gegevens ook zelf invullen en verdergaan.');return;}
+ looking=true;const version=revision,id=draft.id;lookupResult=null;pendingResults=[];
+ const trigger=stage.querySelector('[data-action=lookup]');trigger.disabled=true;trigger.textContent='We zoeken jouw plek…';trigger.setAttribute('aria-busy','true');say('We zoeken jouw plek…');document.querySelector('#lookup-result').textContent='';document.querySelector('#manual-next').hidden=true;
+ const errors={INPUT:'Controleer je postcode en huisnummer of kenteken.',URL:'Gebruik een volledige https-website zonder inloggegevens.',HOST_NOT_APPROVED:'Deze website is niet toegestaan voor automatisch uitlezen. Vul de gegevens zelf in.',ROBOTS:'Deze website staat automatisch uitlezen niet toe. Vul de gegevens zelf in.',REDIRECT:'Deze link verwijst door. Gebruik de uiteindelijke website of vul zelf in.'};
+ try{
+ const results=await Promise.all(jobs.map(async job=>{try{const r=await fetch('/.netlify/functions/place-lookup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(job),signal:AbortSignal.timeout(20000)});const data=await r.json();return {job,data,ok:r.ok};}catch{return {job,data:{error:'SOURCE_UNAVAILABLE'},ok:false};}}));
+ if(revision!==version||draft?.id!==id||draft.step!==2)return;
+ const messages=[];
+ for(const r of results){if(!r.ok||!r.data.found){messages.push(!r.ok?(errors[r.data.error]||'De gegevensdienst is tijdelijk niet bereikbaar. Vul de gegevens zelf in.'):r.job.kind==='rdw'?'Dit kenteken is niet gevonden. Controleer het of vul merk en model in.':'Geen gegevens gevonden. Vul zelf aan.');if(r.job.kind==='rdw')document.querySelector('#manual-fields').hidden=false;}else pendingResults.push(r.data);}
+ if(!pendingResults.length){manual(messages.join(' '));return;}
+ say(messages.join(' ')||'We hebben gegevens gevonden. Controleer of dit jouw plek is.');showSource();
+ }finally{looking=false;if(trigger.isConnected){trigger.disabled=false;trigger.textContent='Zoek mijn plek';trigger.removeAttribute('aria-busy');}}
+}
 function showSource(){
- const box=document.querySelector('#lookup-result');
- if(lookupResult.source==='PDOK / BAG'){box.innerHTML='<p>Gevonden adres:</p><p>'+esc(lookupResult.values.reference)+'</p><p>Bron: PDOK / BAG</p>'+button('accept-address','Gebruik dit adres');say('Controleer straat, huisnummer en woonplaats.');return;}
- box.innerHTML='<p>Controleer welke gegevens je wilt overnemen:</p>'+Object.entries(lookupResult.values).filter(([k,v])=>labels[k]&&v!=='').map(([k,v])=>`<label><input type="checkbox" data-source-field="${k}" ${!draft[k]?'checked':''}> ${labels[k]}: ${esc(v)}${draft[k]?` (nu: ${esc(draft[k])})`:''}</label>`).join('')+'<p>Bron: '+esc(lookupResult.source)+'</p>'+button('accept-source','Neem geselecteerde gegevens over');
- say('Alleen aangevinkte gegevens worden overgenomen. Je kunt ook je eigen invoer behouden.');
+ const box=document.querySelector('#lookup-result');const unresolved=pendingResults.findIndex(r=>r.candidates?.length>1&&!r.selected);
+ if(unresolved>=0){const r=pendingResults[unresolved];box.innerHTML='<p>Welke plek bedoel je?</p>'+r.candidates.map((v,i)=>`<button class="btn" type="button" data-result="${unresolved}" data-candidate="${i}">${esc(v.name||v.reference)}</button>`).join('');return;}
+ const values={},sources=[];
+ // Address service is authoritative for address; website fills missing features only.
+ for(const r of pendingResults){sources.push(r);for(const [k,v] of Object.entries(r.values||{}))if(v!==''&&values[k]===undefined)values[k]=v;}
+ for(const k of Object.keys(values))if(draft.source?.confirmed&&draft.source.values?.[k]!==undefined)values[k]=draft[k];
+ lookupResult={values,sources};box.innerHTML='<div class="start-preview"><h2>Is dit jouw plek?</h2>'+Object.entries(values).filter(([k])=>labels[k]).map(([k,v])=>'<p>'+labels[k]+': '+esc(v)+'</p>').join('')+'</div>'+button('confirm','Ja, dit klopt');
 }
 function changed(e){
  if(!draft||!e.target.name)return;
@@ -68,21 +77,14 @@ function changed(e){
 }
 stage.addEventListener('input',changed);
 stage.addEventListener('change',changed);
-stage.addEventListener('submit',e=>{e.preventDefault();if(busy||!e.target.reportValidity())return;collect();if(draft.step===2){if(!draft.reference?.trim()){say('Vul een adres, kenteken of andere herkenbare omschrijving in.');return;}draft.step=3;save();render()}else persist();});
+stage.addEventListener('submit',e=>{e.preventDefault();if(busy||looking||!e.target.reportValidity())return;collect();if(draft.step===2){if(draft.brand||draft.model){draft.name=[draft.brand,draft.model].filter(Boolean).join(' ');if(!draft.reference)draft.reference=draft.name;}if(!draft.reference?.trim()){say('Vul een adres, kenteken of andere herkenbare omschrijving in.');return;}draft.step=3;save();render()}else persist();});
 stage.addEventListener('click',e=>{
- const b=e.target.closest('button');if(!b||busy)return;
- if(b.dataset.candidate!==undefined&&lookupResult){const candidate=lookupResult.candidates[Number(b.dataset.candidate)];if(candidate){lookupResult.values=candidate;showSource();}return;}
- if(b.dataset.action==='lookup'||b.dataset.action==='website'){findData(b.dataset.action==='website');return;}
- if(b.dataset.action==='accept-address'&&lookupResult?.source==='PDOK / BAG'){draft.reference=lookupResult.values.reference;draft.country=lookupResult.values.country||draft.country;draft.source={source:lookupResult.source,url:lookupResult.url,fetchedAt:lookupResult.fetchedAt,confirmed:true,values:lookupResult.values};save();render();say('Adres bevestigd: '+draft.reference);return;}
- if(b.dataset.action==='accept-source'){
-  if(lookupResult){const values={};for(const el of stage.querySelectorAll('[data-source-field]:checked')){const k=el.dataset.sourceField;draft[k]=String(lookupResult.values[k]);values[k]=draft[k];}
-   if(!Object.keys(values).length){say('Vink eerst aan wat je wilt overnemen, of ga verder met je eigen invoer.');return;}
-   if(values.reference&&lookupResult.values.bagId)values.bagId=lookupResult.values.bagId;
-   draft.source={source:lookupResult.source,url:lookupResult.url,fetchedAt:lookupResult.fetchedAt,confirmed:true,values};save();render();say('Je geselecteerde brongegevens zijn overgenomen. Je kunt ze zelf aanpassen.');
-  }return;
- }
+ const b=e.target.closest('button');if(!b||busy||looking)return;
+ if(b.dataset.candidate!==undefined){const r=pendingResults[Number(b.dataset.result)];if(r){r.values=r.candidates[Number(b.dataset.candidate)];r.selected=true;showSource();}return;}
+ if(b.dataset.action==='lookup'){findData();return;}
+ if(b.dataset.action==='confirm'&&lookupResult){const accepted={};for(const [k,v] of Object.entries(lookupResult.values)){if(labels[k]&&!(draft.source?.confirmed&&draft.source.values?.[k]!==undefined)){draft[k]=String(v);accepted[k]=String(v);}}const r=lookupResult.sources[0];draft.source={source:lookupResult.sources.map(x=>x.source).join(' + '),url:r.url,fetchedAt:r.fetchedAt,confirmed:true,values:{...draft.source?.values,...accepted}};if(!draft.reference)draft.reference=draft.name||'';draft.step=3;save();render();return;}
  if(b.dataset.type){draft=draft?.type===b.dataset.type?{...draft,step:2}:store.create(b.dataset.type);save();render();return;}
- if(b.dataset.action==='no-plate'){collect();draft.manualVehicle=!draft.manualVehicle;save();render();say(draft.manualVehicle?'Vul merk en model in. Je kunt zonder kenteken verder.':'Vul je Nederlandse kenteken in en kies zoeken.');stage.querySelector('[name=reference]')?.focus();return;}
+ if(b.dataset.action==='no-plate'){collect();draft.manualVehicle=!draft.manualVehicle;save();render();document.querySelector('#manual-next').hidden=!draft.manualVehicle;say(draft.manualVehicle?'Vul merk en model in. Je kunt zonder kenteken verder.':'Vul je Nederlandse kenteken in en kies zoeken.');stage.querySelector('[name=reference]')?.focus();return;}
  if(b.dataset.action==='back'){draft.step--;save();render()}
  if(b.dataset.action==='clear'||b.dataset.action==='restart'){store.clear();draft=null;render()}
  if(b.dataset.action==='resume')render();
