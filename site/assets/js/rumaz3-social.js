@@ -191,6 +191,7 @@
   const b=getBookings(p),approved=b.filter(x=>x.status==='approved'),pendingCount=b.filter(x=>x.status==='pending').length;
   const next=approved.filter(x=>x.end>=new Date().toISOString().slice(0,10)).sort((x,y)=>x.start.localeCompare(y.start))[0];
   return `<div class="rz-place-welcome"><p class="eyebrow">Jullie plek, jullie mensen</p><h2>${esc(p.name)}</h2><p>Alles voor je volgende verblijf. Bij elkaar, op één vertrouwde plek.</p></div>
+  ${Array.isArray(p.fields)?p.fields.filter(f=>['onboarding_rooms','onboarding_beds','onboarding_capacity','onboarding_bathrooms','onboarding_kitchens'].includes(f.id)&&/^\d{1,3}$/.test(String(f.value))).map(f=>`<p>${({onboarding_rooms:p.type==='boat'?'Hutten':'Slaapkamers',onboarding_beds:'Bedden',onboarding_capacity:'Slaapplaatsen',onboarding_bathrooms:'Badkamers',onboarding_kitchens:'Keukens'})[f.id]}: ${esc(f.value)}</p>`).join(''):''}
   <div class="rz-action-four" aria-label="Onderdelen van deze plek">
     <button data-switch-part="agenda"><img src="/assets/img/rumaz-illustratie-agenda-rumaz3.svg" alt="Getekende maandagenda met sluitsteen"><strong>Is er plek?</strong><span>Agenda en aanvragen ↗</span></button>
     <button data-switch-part="planner"><img src="/assets/img/rumaz-illustratie-planner-rumaz3.svg" alt="Getekende vertrekchecklist met sluitsteen"><strong>Goed voorbereid.</strong><span>Aankomst en vertrek ↗</span></button>
