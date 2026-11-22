@@ -1,0 +1,199 @@
+name: Rumaz 3.2 - herkenning herstelpatch veilig importeren
+
+on:
+  push:
+    branches:
+      - feat/rumaz-home-3-2
+    paths:
+      - .github/workflows/import-rumaz32-herstel.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: rumaz-3-2-herstel-eenmalig
+  cancel-in-progress: false
+
+jobs:
+  patch-test-import:
+    if: github.repository == 'rumaz-rutger/rumaz-site' && github.ref == 'refs/heads/feat/rumaz-home-3-2'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      RUMAZ_ENV: staging
+      RUMAZ_SITE_ORIGIN: https://rumaz-staging.netlify.app
+      BASE_COMMIT: '2c44e58713613d5ca541c02f896b1fec0c4a2803'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Controleer branch, pakketbasis en ongewijzigde productie
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = 'refs/heads/feat/rumaz-home-3-2'
+          test "$(git branch --show-current)" = 'feat/rumaz-home-3-2'
+          git merge-base --is-ancestor "$BASE_COMMIT" HEAD
+          test -z "$(git status --porcelain)"
+          test -f '.github/workflows/import-rumaz32-herstel.yml'
+          echo 'Pakketbasis is ancestor; nieuwere wijzigingen worden niet weggegooid.'
+      - name: Herstel uitsluitend vijf bestanden met herstel.patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat <<'PATCH_B64' | base64 --decode | gzip -d > /tmp/rumaz32-herstel.patch
+          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
+          ndWyNao4pf8CIVgH9q9DAAA=
+          PATCH_B64
+          test "$(sha256sum /tmp/rumaz32-herstel.patch | cut -d' ' -f1)" = 'a3a02bf72f7470819fdbee9c58eecf7802151a202b6aa85a8b8fa181e43c7f37'
+          git apply --check /tmp/rumaz32-herstel.patch
+          git apply /tmp/rumaz32-herstel.patch
+          git diff --check
+          cat > /tmp/expected-sha256 <<'SHA256_LIST'
+          211953302cc62097ad5040c42e455e99594f5f077f8c0ff388155b0c09a8ab72  netlify/functions/place-lookup.mjs
+          7f3c62ad5a3f31cff93c815fbf431cbb8deb17f323fc176f28de225d558c48ce  qa/place-lookup.test.mjs
+          e079769ea3353cf499951ea5517a228086ac0d53c91ebe5a3426b615cb2bbe2b  qa/start-onboarding.test.mjs
+          c58c00be0aea95cf69956e5c003dda898807963b4246310fda33090e64764daf  server/place-lookup.mjs
+          24b595995fdc2fcac0463d5aa10ae152f1ad849fe44e8829da8eb535a3107834  site/assets/js/rumaz3-onboarding.js
+          SHA256_LIST
+          sha256sum --check /tmp/expected-sha256
+          cat > /tmp/expected-files <<'FILES'
+          netlify/functions/place-lookup.mjs
+          qa/place-lookup.test.mjs
+          qa/start-onboarding.test.mjs
+          server/place-lookup.mjs
+          site/assets/js/rumaz3-onboarding.js
+          FILES
+          git diff --name-only | diff -u /tmp/expected-files -
+          echo 'Herstelpatch en vijf bestandscontroles geslaagd.'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Automatische regressietests, lokale links en stagingbuild
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci
+          npm test
+          python3 qa/check-static.py
+          npm run build
+          test -f dist/index.html
+          test -f dist/start-plek/index.html
+          grep -Fq 'Disallow: /' dist/robots.txt
+          test "$(git diff --name-only -- netlify/functions/place-lookup.mjs qa/place-lookup.test.mjs qa/start-onboarding.test.mjs server/place-lookup.mjs site/assets/js/rumaz3-onboarding.js | wc -l)" -eq 5
+      - name: Commit uitsluitend herstelbestanden en verwijder tijdelijke importworkflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rm '.github/workflows/import-rumaz32-herstel.yml'
+          git add "netlify/functions/place-lookup.mjs" "qa/place-lookup.test.mjs" "qa/start-onboarding.test.mjs" "server/place-lookup.mjs" "site/assets/js/rumaz3-onboarding.js"
+          git diff --cached --check
+          test "$(git diff --cached --name-only | wc -l)" -eq 6
+          git config user.name 'Rumaz staging patch importer'
+          git config user.email 'actions@users.noreply.github.com'
+          git commit -m 'Rumaz 3.2: BAG, RDW en website-herkenning herstel (staging)'
+          git diff --name-only "$BASE_COMMIT" HEAD | diff -u /tmp/expected-files -
+          git fetch origin feat/rumaz-home-3-2
+          test "$(git rev-parse FETCH_HEAD)" = "$(git rev-parse HEAD^)"
+          git push origin HEAD:refs/heads/feat/rumaz-home-3-2
+          echo 'Een herstelcommit gepusht op stagingbranch. Netlify mag nu precies één build starten.'
