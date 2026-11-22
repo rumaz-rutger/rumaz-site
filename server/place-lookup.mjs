@@ -9,7 +9,9 @@ export async function getPublic(url,{limit=524288,types=['application/json'],res
  // Pin the validated address in the TLS request; no second DNS resolution or redirects.
  return new Promise((ok,no)=>{const req=https.get(u,{agent:false,lookup:(_h,o,cb)=>o.all?cb(null,[records[0]]):cb(null,records[0].address,4),headers:{'User-Agent':'RumazImport/1.0 (+https://rumaz.nl/contact/)','Accept':types.join(', '),'Accept-Encoding':'identity'}},res=>{
  let n=0,chunks=[];if(res.statusCode===404){res.resume();ok({status:404,text:''});return;}
- if(res.statusCode!==200||!types.some(t=>String(res.headers['content-type']||'').toLowerCase().startsWith(t))){res.resume();no(Error('SOURCE'));return;}
+ if(res.statusCode>=300&&res.statusCode<400){res.resume();no(Error('REDIRECT'));return;}
+ if(res.statusCode!==200){res.resume();no(Error('HTTP_'+res.statusCode));return;}
+ if(!types.some(t=>String(res.headers['content-type']||'').toLowerCase().startsWith(t))){res.resume();no(Error('CONTENT_TYPE'));return;}
  res.on('data',c=>{n+=c.length;if(n>limit){req.destroy(Error('SIZE'));return;}chunks.push(c)});res.on('end',()=>ok({status:200,text:Buffer.concat(chunks).toString('utf8')}));res.on('error',no);
  });const timer=setTimeout(()=>req.destroy(Error('TIMEOUT')),8000);req.on('close',()=>clearTimeout(timer));req.on('error',no);});
 }
@@ -36,9 +38,9 @@ export function metadata(html){return metadataCandidates(html)[0]||null;}
 export async function lookupPlace(input,{get=getPublic,allowedHosts=[]}={}){
  const q=String(input.query||'').trim();if(q.length>500)throw Error('INPUT');let values,source,url,candidates=[];
  if(input.kind==='rdw'){
- const plate=q.toUpperCase().replace(/[ -]/g,'');if(!/^[A-Z0-9]{6}$/.test(plate))throw Error('INPUT');
+ const plate=q.toUpperCase().replace(/[ -]/g,'');if(!/^[A-Z0-9]{6}$/.test(plate)||!/[A-Z]/.test(plate)||!/[0-9]/.test(plate))throw Error('INPUT');
  url=new URL('https://opendata.rdw.nl/resource/m9d7-ebf2.json');url.searchParams.set('kenteken',plate);url.searchParams.set('$select','kenteken,merk,handelsbenaming,voertuigsoort');url.searchParams.set('$limit','1');
- const rows=JSON.parse((await get(url.href)).text);const v=rows[0];if(v)values={name:clean([v.merk,v.handelsbenaming].filter(Boolean).join(' ')),reference:clean(v.kenteken),vehicleType:clean(v.voertuigsoort)};source='RDW Open Data';
+ let rows;try{rows=JSON.parse((await get(url.href)).text);if(!Array.isArray(rows))throw Error('FORMAT');}catch{throw Error('RDW_UNAVAILABLE');}const v=rows[0];if(v)values={name:clean([v.merk,v.handelsbenaming].filter(Boolean).join(' ')),reference:clean(v.kenteken),vehicleType:clean(v.voertuigsoort)};source='RDW Open Data';
  }else if(input.kind==='address'){
  const m=q.toUpperCase().match(/^([1-9][0-9]{3})\s?([A-Z]{2})\s+([1-9][0-9]{0,4})(?:\s*([A-Z0-9 -]{1,10}))?$/);if(!m)throw Error('INPUT');const pc=m[1]+m[2];
  url=new URL('https://api.pdok.nl/bzk/locatieserver/search/v3_1/free');url.searchParams.set('q',q);url.searchParams.append('fq','type:adres');url.searchParams.append('fq','postcode:'+pc);url.searchParams.append('fq','huisnummer:'+m[3]);url.searchParams.set('rows','10');

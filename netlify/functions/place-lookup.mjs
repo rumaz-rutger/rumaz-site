@@ -10,5 +10,5 @@ export default async req=>{
   const input=JSON.parse(Buffer.concat(parts).toString());
   const hosts=(globalThis.Netlify?.env.get('RUMAZ_IMPORT_HOSTS')||process.env.RUMAZ_IMPORT_HOSTS||'rumaz.nl').split(',').map(x=>x.trim().toLowerCase()).filter(Boolean);
   return reply(await lookupPlace(input,{allowedHosts:hosts}));
- }catch(e){return reply({error:['INPUT','URL','HOST_NOT_APPROVED','ROBOTS'].includes(e.message)?e.message:'SOURCE_UNAVAILABLE'},['INPUT','URL'].includes(e.message)?400:422);}
+ }catch(e){const code=['INPUT','URL','HOST_NOT_APPROVED','ROBOTS','REDIRECT','CONTENT_TYPE','SIZE','TIMEOUT','RDW_UNAVAILABLE'].includes(e.message)?e.message:'SOURCE_UNAVAILABLE';console.warn('RUMAZ_LOOKUP_'+code);return reply({error:code},['INPUT','URL'].includes(code)?400:422);}
 };

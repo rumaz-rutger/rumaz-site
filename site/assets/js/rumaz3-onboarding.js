@@ -45,14 +45,15 @@ async function findData(website){
  try{
  const response=await fetch('/.netlify/functions/place-lookup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({kind:website?'website':['camper','caravan'].includes(draft.type)?'rdw':'address',query}),signal:AbortSignal.timeout(20000)});
  const result=await response.json();if(revision!==requestRevision||!draft||draft.id!==savedId||draft.reference!==reference||(website&&draft.url!==query)||draft.step!==2)return;
- if(!response.ok){const errors={HOST_NOT_APPROVED:'Deze website is nog niet goedgekeurd voor import. Je kunt zelf verder.',ROBOTS:'Deze website staat automatisch uitlezen niet toe. Je kunt zelf verder.',INPUT:'Controleer postcode en huisnummer of het Nederlandse kenteken.'};say(errors[result.error]||'De bron is nu niet bereikbaar. Je kunt zelf verder.');return;}
- if(!result.found){say('We konden nog niets vinden. Je kunt gewoon zelf verder.');return;}
+ if(!response.ok){const errors={REDIRECT:'Deze website verwijst naar een ander adres. Gebruik de uiteindelijke HTTPS-link of vul zelf in.',CONTENT_TYPE:'Deze bron levert geen leesbare webpagina. Vul zelf in.',SIZE:'Deze pagina is te groot om veilig te importeren. Vul zelf in.',TIMEOUT:'De bron reageert niet op tijd. Probeer later of vul zelf in.',URL:'Gebruik een openbare HTTPS-link zonder inloggegevens. Je kunt ook zelf invullen.',RDW_UNAVAILABLE:'RDW is nu niet bereikbaar. Kies Geen Nederlands kenteken om merk en model handmatig in te vullen.',HOST_NOT_APPROVED:'Voor dit domein is nog geen importtoestemming ingesteld. Vul de gegevens handmatig in.',ROBOTS:'Deze website staat automatisch uitlezen niet toe. Je kunt zelf verder.',INPUT:'Controleer postcode en huisnummer of het Nederlandse kenteken.'};say(errors[result.error]||'De bron is nu niet bereikbaar. Je kunt zelf verder.');return;}
+ if(!result.found){say(website?'Deze pagina bevat geen bruikbare openbare accommodatiegegevens. Vul de gegevens zelf in.':['camper','caravan'].includes(draft.type)?'Dit kenteken is niet gevonden. Controleer het of kies Geen Nederlands kenteken om merk en model in te vullen.':'Geen exact adres gevonden. Controleer de invoer of vul het adres zelf in.');return;}
  lookupResult=result;const box=document.querySelector('#lookup-result');if(result.candidates?.length>1){box.innerHTML='<p>Kies jouw adres of accommodatie:</p>'+result.candidates.map((v,i)=>'<button type="button" class="btn" data-candidate="'+i+'">'+esc(v.name||v.reference)+'</button>').join('');say('Er zijn meerdere resultaten. Maak zelf een keuze.');return;}showSource();
  }catch{if(revision===requestRevision)say('Zoeken is niet gelukt. Je kunt gewoon zelf verder.');}finally{looking=false;}
 }
 const labels={name:'Naam',reference:'Adres of kenteken',country:'Land',rooms:'Slaapkamers of hutten',beds:'Bedden',bathrooms:'Badkamers',capacity:'Slaapplaatsen'};
 function showSource(){
  const box=document.querySelector('#lookup-result');
+ if(lookupResult.source==='PDOK / BAG'){box.innerHTML='<p>Gevonden adres:</p><p>'+esc(lookupResult.values.reference)+'</p><p>Bron: PDOK / BAG</p>'+button('accept-address','Gebruik dit adres');say('Controleer straat, huisnummer en woonplaats.');return;}
  box.innerHTML='<p>Controleer welke gegevens je wilt overnemen:</p>'+Object.entries(lookupResult.values).filter(([k,v])=>labels[k]&&v!=='').map(([k,v])=>`<label><input type="checkbox" data-source-field="${k}" ${!draft[k]?'checked':''}> ${labels[k]}: ${esc(v)}${draft[k]?` (nu: ${esc(draft[k])})`:''}</label>`).join('')+'<p>Bron: '+esc(lookupResult.source)+'</p>'+button('accept-source','Neem geselecteerde gegevens over');
  say('Alleen aangevinkte gegevens worden overgenomen. Je kunt ook je eigen invoer behouden.');
 }
@@ -72,6 +73,7 @@ stage.addEventListener('click',e=>{
  const b=e.target.closest('button');if(!b||busy)return;
  if(b.dataset.candidate!==undefined&&lookupResult){const candidate=lookupResult.candidates[Number(b.dataset.candidate)];if(candidate){lookupResult.values=candidate;showSource();}return;}
  if(b.dataset.action==='lookup'||b.dataset.action==='website'){findData(b.dataset.action==='website');return;}
+ if(b.dataset.action==='accept-address'&&lookupResult?.source==='PDOK / BAG'){draft.reference=lookupResult.values.reference;draft.country=lookupResult.values.country||draft.country;draft.source={source:lookupResult.source,url:lookupResult.url,fetchedAt:lookupResult.fetchedAt,confirmed:true,values:lookupResult.values};save();render();say('Adres bevestigd: '+draft.reference);return;}
  if(b.dataset.action==='accept-source'){
   if(lookupResult){const values={};for(const el of stage.querySelectorAll('[data-source-field]:checked')){const k=el.dataset.sourceField;draft[k]=String(lookupResult.values[k]);values[k]=draft[k];}
    if(!Object.keys(values).length){say('Vink eerst aan wat je wilt overnemen, of ga verder met je eigen invoer.');return;}
