@@ -407,7 +407,7 @@
   selectTab('plek');chooseRole('own',code==='woning'?'home':code==='boot'?'boat':code);intent.clear();
   history.replaceState(history.state,'','/app/#plek');
  }
- document.querySelectorAll('[data-place-intent]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();startPlace(a.dataset.placeIntent)}));
+ // Home-kaarten gebruiken hun eigen /start-plek/-link; geen JavaScript-omleiding.
  if(pendingType)startPlace(pendingType);
  if(location.hash==='#kies-plek'){selectTab('home');document.getElementById('choicesTitle').focus();}
  document.getElementById('infoBtn').addEventListener('click',()=>notify(live?'Je plekken zijn alleen zichtbaar voor deelnemers met toegang.':'Dit is een lokale demonstratie.'));
